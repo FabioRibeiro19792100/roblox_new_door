@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expedição Roblox</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --jam:    #F5B731;
+  --jam-d:  #D4992A;
+  --jam-l:  #FEF3D7;
+  --expo:   #5BB8E8;
+  --expo-d: #3A9ACC;
+  --expo-l: #E8F6FD;
+  --aprender:   #E63946;
+  --aprender-d: #C02530;
+  --aprender-l: #FDEAEB;
+  --blk: #0A0A0A;
+  --wht: #FAFAFA;
+  --gray: #F0F0F0;
+  --gray2: #E0E0E0;
+  --t2: #555;
+  --t3: #999;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--wht);color:var(--blk);min-height:100vh;overflow-x:hidden;}
+
+/* ── SHELL NAV ── */
+.shell-nav{
+  position:sticky;top:0;z-index:1000;
+  background:var(--blk);
+  height:52px;padding:0 24px;
+  display:flex;align-items:center;gap:16px;
+  border-bottom:3px solid var(--current-color, var(--jam));
+  transition:border-color .4s;
+}
+.nav-logo{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:#fff;letter-spacing:.5px;}
+.nav-spacer{flex:1;}
+.nav-jornada{font-size:11px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;}
+.nav-jornada span{color:var(--current-color,var(--jam));}
+.shell-toggle{display:flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:2px;gap:2px;}
+.stbtn{padding:5px 16px;font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.35);transition:all .2s;}
+.stbtn.on{background:rgba(255,255,255,.12);color:#fff;}
+
+/* DEVICE VIEWS */
+.view{display:none;}.view.on{display:block;}
+
+/* ── JORNADA TABS ── */
+.jorns{background:var(--blk);border-bottom:1px solid rgba(255,255,255,.08);display:flex;padding:0 24px;}
+.jbtn{
+  padding:12px 20px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:12px;font-weight:600;
+  cursor:pointer;border:none;background:transparent;
+  color:rgba(255,255,255,.3);
+  border-bottom:2px solid transparent;
+  transition:all .2s;letter-spacing:.3px;
+}
+.jbtn.on{color:#fff;}
+.jbtn[data-j="jam"].on{border-bottom-color:var(--jam);}
+.jbtn[data-j="expo"].on{border-bottom-color:var(--expo);}
+.jbtn[data-j="aprender"].on{border-bottom-color:var(--aprender);}
+
+/* JORNADA PAGES */
+.jpage{display:none;}.jpage.on{display:block;}
+
+/* ════════════════════════════════
+   PAGE STRUCTURE (shared)
+════════════════════════════════ */
+.page-nav{
+  background:var(--wht);border-bottom:1px solid var(--gray2);
+  padding:0 32px;display:flex;align-items:center;height:48px;gap:12px;
+  position:sticky;top:52px;z-index:50;
+}
+.pn-logo{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--blk);}
+.pn-sep{width:1px;height:14px;background:var(--gray2);}
+.pn-sub{font-size:11px;font-weight:500;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;}
+.pn-spacer{flex:1;}
+.pn-date{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:var(--t2);}
+.pn-cta{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;padding:7px 18px;border:none;cursor:pointer;color:#fff;transition:all .2s;}
+
+/* ── COUNTDOWN (jam only) ── */
+.cd-bar{
+  background:var(--blk);padding:14px 32px;
+  display:flex;align-items:baseline;gap:0;
+  border-bottom:2px solid var(--jam);
+}
+.cd-pre{font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:2px;margin-right:20px;align-self:center;}
+.cd-timer{display:flex;align-items:baseline;flex:1;gap:0;}
+.cd-unit{display:flex;flex-direction:column;align-items:flex-start;margin-right:20px;}
+.cd-num{font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:700;color:#fff;line-height:1;letter-spacing:-2px;}
+.cd-lbl{font-size:8px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:2px;margin-top:2px;}
+.cd-sep{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;color:var(--jam);opacity:.4;margin-right:20px;line-height:1.1;}
+.cd-btn{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;padding:10px 24px;border:none;cursor:pointer;margin-left:auto;background:var(--jam);color:var(--blk);}
+
+/* ── HERO ── */
+.hero{padding:64px 32px 56px;border-bottom:1px solid var(--gray2);}
+.hero-ey{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.hero-ey-line{width:32px;height:2px;}
+.hero-ey-txt{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;color:var(--t3);}
+.hero-h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(36px,5.5vw,68px);
+  font-weight:700;line-height:1.0;
+  color:var(--blk);
+  letter-spacing:-2.5px;
+  text-transform:uppercase;
+  margin-bottom:24px;
+}
+.hero-h1 .ac{display:block;}
+.hero-bot{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;}
+.hero-desc{font-size:16px;font-weight:400;color:var(--t2);line-height:1.7;max-width:460px;}
+.hero-desc strong{color:var(--blk);font-weight:600;}
+.hero-acts{display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex-shrink:0;}
+.btn-main{display:inline-flex;align-items:center;gap:10px;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:13px 26px;border:none;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-main svg{width:15px;height:15px;}
+.btn-sec{background:transparent;color:var(--t3);font-family:'Poppins',sans-serif;font-size:13px;border:none;cursor:pointer;}
+
+/* ── VIDEO ── */
+.vblock{border-bottom:1px solid var(--gray2);}
+.vph{aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--blk);cursor:pointer;position:relative;overflow:hidden;}
+.vph::after{content:'';position:absolute;inset:0;opacity:.06;}
+.vph-play{width:68px;height:68px;border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;color:#fff;position:relative;z-index:1;transition:all .2s;}
+.vph:hover .vph-play{background:rgba(255,255,255,.1);}
+.vph-play svg{width:24px;height:24px;}
+.vph-t{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:#fff;position:relative;z-index:1;}
+.vph-s{font-size:12px;color:rgba(255,255,255,.3);position:relative;z-index:1;}
+.vfr{display:none;aspect-ratio:16/9;}
+.vfr iframe{width:100%;height:100%;border:none;}
+
+/* ── REFRAME / WHY ── */
+.why{padding:48px 32px;border-bottom:1px solid var(--gray2);}
+.sec-lbl{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:28px;}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--gray2);}
+.why-item{padding:28px;border-right:1px solid var(--gray2);border-bottom:1px solid var(--gray2);}
+.why-item:nth-child(2n){border-right:none;}
+.why-item:nth-child(3),.why-item:nth-child(4){border-bottom:none;}
+.why-ic{margin-bottom:16px;}
+.why-ic svg{width:32px;height:32px;stroke-width:1.2;}
+.why-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--blk);margin-bottom:6px;letter-spacing:-.3px;}
+.why-sub{font-size:13px;color:var(--t2);line-height:1.65;}
+
+/* ── NEXT STEP ── */
+.next{border-bottom:1px solid var(--gray2);}
+.next-lbl{padding:24px 32px 0;font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:2.5px;}
+.next-grid{display:grid;grid-template-columns:1fr 1fr;}
+.ns{padding:28px 32px;border-right:1px solid var(--gray2);cursor:pointer;transition:background .15s;}
+.ns:last-child{border-right:none;}
+.ns.primary{background:var(--ac-color,var(--jam));}
+.ns:not(.primary):hover{background:var(--gray);}
+.ns-ic{margin-bottom:16px;}
+.ns-ic svg{width:32px;height:32px;stroke-width:1.2;}
+.ns.primary .ns-ic{color:var(--blk);}
+.ns:not(.primary) .ns-ic{color:var(--blk);}
+.ns-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--blk);margin-bottom:6px;letter-spacing:-.3px;}
+.ns-sub{font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:18px;}
+.ns.primary .ns-sub{color:rgba(0,0,0,.6);}
+.ns-btn{display:inline-flex;align-items:center;gap:6px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;padding:9px 18px;border:none;cursor:pointer;letter-spacing:.3px;transition:all .2s;}
+.ns.primary .ns-btn{background:var(--blk);color:#fff;}
+.ns:not(.primary) .ns-btn{background:transparent;color:var(--blk);border:1px solid var(--gray2);}
+
+/* ── BOTTOM CTA ── */
+.bcta{background:var(--blk);padding:56px 32px;display:flex;align-items:center;justify-content:space-between;gap:32px;}
+.bc-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.5vw,48px);font-weight:700;color:#fff;letter-spacing:-2px;line-height:1;text-transform:uppercase;margin-bottom:8px;}
+.bc-sub{font-size:14px;color:rgba(255,255,255,.4);line-height:1.6;}
+.bc-btn{display:inline-flex;align-items:center;gap:10px;color:var(--blk);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;padding:14px 32px;border:none;cursor:pointer;flex-shrink:0;transition:all .2s;}
+.bc-btn svg{width:16px;height:16px;}
+.bc-note{font-size:11px;color:rgba(255,255,255,.25);margin-top:10px;text-align:right;}
+
+/* ── EMAIL ── */
+.email-row{display:flex;gap:0;margin-top:12px;}
+.email-row input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-right:none;padding:9px 13px;color:#fff;font-family:'Poppins',sans-serif;font-size:13px;outline:none;}
+.email-row input::placeholder{color:rgba(255,255,255,.25);}
+.email-row input:focus{border-color:rgba(255,255,255,.25);}
+.email-row button{background:#fff;border:none;padding:9px 16px;color:var(--blk);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+
+/* ── FAB CHAT ── */
+.fab-wrap{position:absolute;bottom:20px;right:20px;z-index:100;}
+.fab-btn{width:48px;height:48px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 4px 16px rgba(0,0,0,.15);transition:all .2s;}
+.fab-btn:hover{transform:scale(1.05);}
+.fab-btn svg{width:20px;height:20px;color:#fff;}
+.fab-badge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;color:var(--blk);}
+.chat-widget{display:none;flex-direction:column;background:var(--wht);border:1px solid #222;box-shadow:0 8px 40px rgba(0,0,0,.18);margin-bottom:8px;width:320px;}
+.chat-widget.open{display:flex;}
+.cw-head{background:var(--blk);padding:13px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.cw-av{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--blk);}
+.cw-name{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;color:#fff;}
+.cw-st{font-size:10px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:4px;}
+.cw-dot{width:5px;height:5px;background:#22C55E;}
+.cw-close{margin-left:auto;background:transparent;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:17px;line-height:1;}
+.cw-close:hover{color:#fff;}
+.cw-msgs{padding:12px;min-height:180px;max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;}
+.cw-msgs::-webkit-scrollbar{width:3px;}
+.cw-msgs::-webkit-scrollbar-thumb{background:var(--gray2);}
+.cmsg{display:flex;gap:7px;align-items:flex-start;}
+.cmsg.u{flex-direction:row-reverse;}
+.cmav{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;}
+.cmsg.ai .cmav{background:var(--blk);color:#fff;}
+.cmsg.u .cmav{color:var(--blk);}
+.cmbub{max-width:84%;padding:7px 10px;font-size:12px;line-height:1.55;font-weight:400;}
+.cmsg.ai .cmbub{background:var(--gray);color:var(--blk);}
+.cmsg.u .cmbub{color:#fff;}
+.typing{display:flex;gap:4px;align-items:center;}
+.td{width:5px;height:5px;animation:bou 1.2s infinite;}
+.td:nth-child(2){animation-delay:.2s;}.td:nth-child(3){animation-delay:.4s;}
+@keyframes bou{0%,60%,100%{transform:translateY(0);opacity:.3;}30%{transform:translateY(-4px);opacity:1;}}
+/* anamnese */
+.cw-opts{display:flex;flex-direction:column;gap:4px;padding-left:29px;margin-top:3px;}
+.cw-opt{background:var(--wht);border:0.5px solid var(--gray2);padding:7px 12px;font-family:'Poppins',sans-serif;font-size:12px;color:var(--blk);cursor:pointer;text-align:left;transition:all .15s;}
+.cw-opt:hover{background:var(--gray);border-color:#999;}
+.cw-opt:disabled{opacity:.35;cursor:not-allowed;}
+.cw-results{display:flex;flex-direction:column;gap:6px;padding-left:29px;margin-top:3px;}
+.cw-rbtn{border:none;padding:10px 14px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-align:left;transition:opacity .2s;}
+.cw-rbtn:hover{opacity:.85;}
+.cw-restart{background:transparent;border:none;font-family:'Poppins',sans-serif;font-size:11px;color:var(--t3);cursor:pointer;text-align:left;padding:4px 0;}
+.cw-restart:hover{color:var(--t2);}
+/* explain screen */
+.cw-explain{background:var(--gray);padding:12px;margin-top:6px;}
+.cw-ex-title{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--blk);margin-bottom:10px;}
+.cw-ex-list{display:flex;flex-direction:column;gap:7px;margin-bottom:12px;}
+.cw-ex-item{display:flex;gap:8px;font-size:12px;color:var(--t2);line-height:1.5;}
+.cw-ex-num{width:18px;height:18px;background:var(--blk);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.cw-go-btn{display:block;width:100%;border:none;padding:11px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--blk);cursor:pointer;text-align:center;}
+.cw-back{background:transparent;border:none;font-size:11px;color:var(--t3);cursor:pointer;margin-top:6px;display:block;text-align:left;font-family:'Poppins',sans-serif;}
+/* blur overlay */
+.frame-blur{display:none;position:absolute;inset:0;background:rgba(250,250,250,.6);backdrop-filter:blur(4px);z-index:49;}
+.frame-blur.on{display:block;}
+
+/* ════════════════════
+   BROWSER FRAME
+════════════════════ */
+.frames{padding:0;display:flex;justify-content:center;}
+.frame-wrap{display:none;}.frame-wrap.on{display:flex;justify-content:center;}
+.browser{width:1100px;background:var(--wht);border:1px solid #ccc;box-shadow:0 8px 40px rgba(0,0,0,.12);display:flex;flex-direction:column;position:relative;}
+.browser-bar{background:#F0F0F0;border-bottom:1px solid #DDD;padding:8px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.bdots{display:flex;gap:6px;}
+.bdot{width:12px;height:12px;border-radius:50%;}
+.bdot.r{background:#FF5F57;}.bdot.y{background:#FFBD2E;}.bdot.g{background:#28C840;}
+.burl{flex:1;background:#fff;border:1px solid #DDD;padding:5px 12px;font-size:12px;color:#666;font-family:'Poppins',sans-serif;margin:0 8px;}
+.browser-body{height:700px;overflow-y:auto;position:relative;}
+.browser-body::-webkit-scrollbar{width:5px;}
+.browser-body::-webkit-scrollbar-thumb{background:#DDD;}
+
+/* ════════════════════
+   PHONE FRAME
+════════════════════ */
+.phone-wrap{display:flex;flex-direction:column;align-items:center;padding:24px 0 40px;}
+.phone-lbl{font-size:10px;font-weight:500;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.phone{width:375px;border-radius:44px;border:8px solid #111;box-shadow:0 0 0 1px #333,0 32px 80px rgba(0,0,0,.3);overflow:hidden;display:flex;flex-direction:column;height:780px;background:var(--wht);}
+.phone-notch{height:26px;background:#111;border-radius:0 0 18px 18px;width:110px;margin:0 auto;flex-shrink:0;}
+.phone-body{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;}
+.phone-scroll{flex:1;overflow-y:auto;}
+.phone-scroll::-webkit-scrollbar{width:0;}
+.m-fab-wrap{position:absolute;bottom:10px;right:10px;z-index:50;display:flex;flex-direction:column;align-items:flex-end;}
+.m-fab-wrap .chat-widget{width:270px;}
+.phone-hbar{height:20px;background:#111;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phone-hb{width:34px;height:4px;background:#333;}
+
+/* ── MOBILE OVERRIDES ── */
+.mobile .page-nav{padding:0 14px;height:42px;top:52px;}
+.mobile .pn-cta,.mobile .pn-date{display:none;}
+.mobile .cd-bar{padding:10px 14px;}
+.mobile .cd-pre,.mobile .cd-btn{display:none;}
+.mobile .cd-num{font-size:28px;letter-spacing:-1px;}
+.mobile .cd-sep{font-size:22px;margin-right:12px;}
+.mobile .cd-unit{margin-right:12px;}
+.mobile .hero{padding:22px 14px 20px;}
+.mobile .hero-h1{font-size:34px;letter-spacing:-2px;margin-bottom:16px;}
+.mobile .hero-bot{flex-direction:column;align-items:flex-start;gap:16px;}
+.mobile .hero-acts{align-items:stretch;width:100%;}
+.mobile .btn-main{justify-content:center;padding:13px;}
+.mobile .btn-sec{display:none;}
+.mobile .hero-desc{max-width:100%;font-size:13px;}
+.mobile .why{padding:18px 14px;}
+.mobile .why-grid{grid-template-columns:1fr;}
+.mobile .why-item{border-right:none;padding:16px 14px;}
+.mobile .why-item:nth-child(3){border-bottom:1px solid var(--gray2);}
+.mobile .why-ic svg{width:24px;height:24px;}
+.mobile .next-lbl{padding:16px 14px 0;}
+.mobile .next-grid{grid-template-columns:1fr;}
+.mobile .ns{padding:18px 14px;border-right:none;border-bottom:1px solid var(--gray2);}
+.mobile .ns:last-child{border-bottom:none;}
+.mobile .ns-ic svg{width:24px;height:24px;}
+.mobile .bcta{padding:28px 14px;flex-direction:column;gap:20px;}
+.mobile .bc-title{font-size:28px;}
+.mobile .bc-btn{width:100%;justify-content:center;}
+.mobile .email-row input,.mobile .email-row button{font-size:12px;}
+</style>
+</head>
+<body>
+
+<!-- SHELL NAV -->
+<div class="shell-nav" id="shellNav">
+  <div class="nav-logo">Expedição Roblox</div>
+  <div class="nav-spacer"></div>
+  <div class="nav-jornada" id="navJornada">—</div>
+  <div class="shell-toggle">
+    <button class="stbtn on" id="stD" onclick="setDevice('d')">🖥 Desktop</button>
+    <button class="stbtn" id="stM" onclick="setDevice('m')">📱 Mobile</button>
+  </div>
+</div>
+
+<!-- JORNADA TABS -->
+<div class="jorns">
+  <button class="jbtn on" data-j="jam"      onclick="setJ('jam')">🏆 Game Jam</button>
+  <button class="jbtn"    data-j="expo"     onclick="setJ('expo')">🗺️ Expedição</button>
+  <button class="jbtn"    data-j="aprender" onclick="setJ('aprender')">🎮 Aprender a Criar</button>
+</div>
+
+<!-- ════════════ DESKTOP ════════════ -->
+<div class="view on" id="vD">
+  <div class="frames">
+    <div class="frame-wrap on" id="fD">
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="bdots"><div class="bdot r"></div><div class="bdot y"></div><div class="bdot g"></div></div>
+          <div class="burl" id="burl">expedicaoroblox.com.br/jam</div>
+        </div>
+        <div class="browser-body" id="browserBody">
+          <div id="pageContent"></div>
+        </div>
+        <!-- FAB desktop -->
+        <div class="fab-wrap" id="fabD">
+          <div class="chat-widget" id="cwD">
+            <div class="cw-head">
+              <div class="cw-av" id="cwAvD">EX</div>
+              <div><div class="cw-name">Guia da Expedição</div><div class="cw-st"><div class="cw-dot"></div>Online agora</div></div>
+              <button class="cw-close" onclick="toggleChat('D')">✕</button>
+            </div>
+            <div class="cw-msgs" id="msgsD"></div>
+          </div>
+          <button class="fab-btn" id="fabBtnD" onclick="toggleChat('D')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <div class="fab-badge" id="badgeD">1</div>
+          </button>
+        </div>
+        <div class="frame-blur" id="blurD"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ MOBILE ════════════ -->
+<div class="view" id="vM">
+  <div class="phone-wrap">
+    <div class="phone-lbl">375px · Mobile</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-body">
+        <div class="phone-scroll">
+          <div id="mPageContent"></div>
+        </div>
+        <!-- FAB mobile -->
+        <div class="m-fab-wrap" id="fabM">
+          <div class="chat-widget" id="cwM">
+            <div class="cw-head">
+              <div class="cw-av" id="cwAvM">EX</div>
+              <div><div class="cw-name">Guia da Expedição</div><div class="cw-st"><div class="cw-dot"></div>Online agora</div></div>
+              <button class="cw-close" onclick="toggleChat('M')">✕</button>
+            </div>
+            <div class="cw-msgs" id="msgsM"></div>
+          </div>
+          <button class="fab-btn" id="fabBtnM" onclick="toggleChat('M')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <div class="fab-badge" id="badgeM">1</div>
+          </button>
+        </div>
+        <div class="frame-blur" id="blurM"></div>
+      </div>
+      <div class="phone-hbar"><div class="phone-hb"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIGS ──
+const JAM_END = new Date('2025-04-24T23:59:59-03:00');
+const CIDADES_EVENTO = ['sp','rj','recife','poa','manaus','brasilia'];
+
+const JORNADAS = {
+  jam: {
+    color: '#F5B731', colorD: '#D4992A', colorL: '#FEF3D7',
+    url: 'expedicaoroblox.com.br/jam',
+    label: 'Game Jam',
+    navTag: '🏆 Game Jam',
+    pnSub: 'Game Jam',
+    pnDate: 'Encerra 24 / 04',
+    pnCtaTxt: 'Entrar na Jam →',
+    showCountdown: true,
+    heroEy: 'Expedição Roblox · Game Jam',
+    heroH1: ['Crie experiências', 'incríveis.'],
+    heroH1ac: 'Demonstre seu talento.',
+    heroDesc: 'Concorra a prêmios e brindes exclusivos. A Game Jam é o momento de transformar sua ideia em game — <strong>sem precisar saber programar. Do zero.</strong>',
+    heroCtaTxt: 'Entrar na comunidade',
+    whyTitle: 'Você consegue fazer isso',
+    why: [
+      {title:'Não precisa programar', sub:'Roblox Studio é visual. Arrasta, encaixa, testa. Como Lego — vira um game real.'},
+      {title:'Começa do zero hoje', sub:'Baixa o Studio grátis, entra no Discord e já tem mentores prontos.'},
+      {title:'Não vai estar sozinho', sub:'Outros criadores no mesmo momento. Dúvida? Alguém responde.'},
+      {title:'10.000 Robux de prêmio', sub:'Real. Mas o mais valioso é seu game publicado no Roblox, feito por você.'},
+    ],
+    nextTitle: 'Próximo passo',
+    nextCards: [
+      {primary:true, title:'Baixar Roblox Studio', sub:'Grátis. PC ou Mac. Em minutos criando.', btn:'⬇ Baixar agora', action:'studio'},
+      {primary:false, title:'Só tenho celular agora', sub:'App de criação mobile. Salva e ativa no Studio depois.', btn:'→ Abrir app', action:'app'},
+    ],
+    mobileNextCards: [
+      {primary:true, title:'App de criação mobile', sub:'Cria pelo celular. Salva e ativa no Studio depois.', btn:'→ Abrir app', action:'app'},
+      {primary:false, title:'Receber link do Studio', sub:'Te mandamos o link quando estiver no PC.', btn:'Receber por email', action:'email', hasEmail:true},
+    ],
+    bctaTitle: 'Pronto pra criar?',
+    bctaAc: 'Entra na Jam.',
+    bctaSub: 'Comunidade no Discord · Encerra 24/04',
+    bctaBtn: 'Entrar na comunidade',
+    fabColor: '#F5B731',
+    fabAvBg: '#F5B731',
+    sys: `Voce e o Guia da Game Jam da Expedicao Roblox para jovens de 16 a 18 anos. A Game Jam e uma competicao: cria um game no Roblox Studio, entra no Discord, submete, ganha ate 10.000 Robux. Encerra 24/04. Nao precisa programar. Capitais com evento presencial: Sao Paulo (sp), Rio de Janeiro (rj), Recife, Porto Alegre (poa), Manaus, Brasilia.`,
+    questions: [
+      {text:'Você sabe o que é uma Game Jam?', opts:['Sim, sei bem','Mais ou menos','Não sei']},
+      {text:'Já criou algo no Roblox antes?', opts:['Sim, já criei','Nunca criei nada','Tentei mas travei']},
+      {text:'Em qual cidade você mora?', opts:['São Paulo','Rio de Janeiro','Recife','Porto Alegre','Manaus','Brasília','Outra cidade'], cidade:true},
+    ],
+    explain: {
+      title:'O que acontece quando você entra no Discord:',
+      items:['Você entra na comunidade da Expedição Roblox','Apresenta sua ideia de game','Recebe orientação para baixar o Studio e começar','Acompanha outros criadores e tira dúvidas','Submete seu game até 24/04 e concorre a 10.000 Robux'],
+      btn:'Entrar no Discord da Jam →'
+    }
+  },
+  expo: {
+    color: '#5BB8E8', colorD: '#3A9ACC', colorL: '#E8F6FD',
+    url: 'expedicaoroblox.com.br/evento',
+    label: 'Expedição',
+    navTag: '🗺️ Expedição Presencial',
+    pnSub: 'Expedição',
+    pnDate: 'SP · RJ · REC · POA · MAN · BSB',
+    pnCtaTxt: 'Garantir vaga →',
+    showCountdown: false,
+    heroEy: 'Expedição Roblox · Evento Presencial',
+    heroH1: ['Aprenda a criar', 'experiências digitais.'],
+    heroH1ac: 'Ao vivo. Com quem faz.',
+    heroDesc: 'Um evento presencial nas capitais brasileiras. Você aprende a criar games com Roblox Studio guiado por profissionais de educação, tecnologia e games — <strong>e conecta essa habilidade com o mercado.</strong>',
+    heroCtaTxt: 'Garantir minha vaga',
+    whyTitle: 'O que acontece no evento',
+    why: [
+      {title:'Criação guiada por profissionais', sub:'Educadores, desenvolvedores e profissionais de games te guiam do zero ao game publicado.'},
+      {title:'Habilidade + mercado', sub:'Mais do que criar: você entende como essa habilidade se conecta com oportunidades reais.'},
+      {title:'Uso ético e seguro', sub:'Você aprende sobre criação responsável, privacidade e segurança no ambiente digital.'},
+      {title:'Comunidade real', sub:'Você vai com pessoas da sua cidade e sai com uma rede de criadores.'},
+    ],
+    nextTitle: 'Escolha sua capital',
+    nextCards: [
+      {primary:true, title:'Garantir minha vaga', sub:'Vagas limitadas por cidade. Se inscreva agora.', btn:'→ Me inscrever', action:'evento'},
+      {primary:false, title:'Ver outras cidades', sub:'São Paulo · Rio · Recife · Porto Alegre · Manaus · Brasília', btn:'Ver calendário', action:'cidades'},
+    ],
+    mobileNextCards: [
+      {primary:true, title:'Garantir minha vaga', sub:'Vagas limitadas. Se inscreva agora.', btn:'→ Me inscrever', action:'evento'},
+      {primary:false, title:'Ver cidades disponíveis', sub:'SP · RJ · REC · POA · MAN · BSB', btn:'Ver calendário', action:'cidades'},
+    ],
+    bctaTitle: 'Pronto pra se inscrever?',
+    bctaAc: 'Vagas limitadas.',
+    bctaSub: 'Evento presencial nas capitais brasileiras',
+    bctaBtn: 'Garantir minha vaga',
+    fabColor: '#5BB8E8',
+    fabAvBg: '#5BB8E8',
+    sys: `Voce e o Guia da Expedicao Roblox presencial para jovens de 16 a 18 anos. E um evento presencial nas capitais: Sao Paulo, Rio de Janeiro, Recife, Porto Alegre, Manaus e Brasilia. No evento: criacao de games com Roblox Studio guiada por profissionais de educacao, tecnologia e games. Tambem aborda mercado, uso etico e seguro do ambiente digital. Vagas limitadas por cidade.`,
+    questions: [
+      {text:'Em qual cidade você mora?', opts:['São Paulo','Rio de Janeiro','Recife','Porto Alegre','Manaus','Brasília','Outra cidade'], cidade:true},
+      {text:'Você já cria algo no Roblox ou está começando do zero?', opts:['Já crio','Estou começando','Nunca tentei']},
+      {text:'O que mais te interessa no evento?', opts:['Aprender a criar games','Conectar com o mercado','Conhecer outros criadores','Entender uso ético e seguro']},
+    ],
+    explain: {
+      title:'O que acontece para garantir sua vaga:',
+      items:['Escolha sua capital e a data disponível','Preencha o formulário de inscrição','Envie a autorização assinada pelo seu responsável','Confirme sua vaga por email','Apareça no dia com vontade de criar'],
+      btn:'Garantir minha vaga →'
+    }
+  },
+  aprender: {
+    color: '#E63946', colorD: '#C02530', colorL: '#FDEAEB',
+    url: 'expedicaoroblox.com.br/criar',
+    label: 'Aprender',
+    navTag: '🎮 Aprender a Criar',
+    pnSub: 'Aprender',
+    pnDate: 'Grátis · PC e Mobile',
+    pnCtaTxt: 'Começar agora →',
+    showCountdown: false,
+    heroEy: 'Expedição Roblox · Criação',
+    heroH1: ['Crie seu primeiro', 'game no Roblox.'],
+    heroH1ac: 'Do zero. No seu ritmo.',
+    heroDesc: 'Baixe o Roblox Studio, instale nosso plugin com tutoriais e comece a criar. Se estiver no celular, use nosso emulador mobile — <strong>você aprende criando, não assistindo.</strong>',
+    heroCtaTxt: 'Começar a criar',
+    whyTitle: 'Como funciona',
+    why: [
+      {title:'Não precisa de experiência', sub:'O Studio é visual e intuitivo. Nosso plugin guia cada passo com tutoriais interativos.'},
+      {title:'PC ou celular', sub:'No PC: Roblox Studio + plugin. No celular: emulador mobile que salva e ativa no Studio depois.'},
+      {title:'Você aprende criando', sub:'Sem teoria antes de praticar. Cada tutorial termina com algo real publicado no Roblox.'},
+      {title:'No seu ritmo', sub:'Sem prazo, sem pressão. Você avança conforme aprende e quando estiver pronto, pode entrar na Jam.'},
+    ],
+    nextTitle: 'Por onde começar',
+    nextCards: [
+      {primary:true, title:'Baixar Roblox Studio + Plugin', sub:'Grátis. PC ou Mac. Plugin com tutoriais interativos incluído.', btn:'⬇ Baixar agora', action:'studio'},
+      {primary:false, title:'Tenho só celular', sub:'Emulador mobile — cria pelo celular, salva e ativa no Studio depois.', btn:'→ Abrir emulador', action:'app'},
+    ],
+    mobileNextCards: [
+      {primary:true, title:'Emulador mobile', sub:'Cria pelo celular. Salva e ativa no Studio depois no PC.', btn:'→ Abrir emulador', action:'app'},
+      {primary:false, title:'Tenho acesso a um PC', sub:'Baixa o Studio + plugin com tutoriais.', btn:'⬇ Baixar Studio', action:'studio'},
+    ],
+    bctaTitle: 'Comece a criar hoje.',
+    bctaAc: 'É grátis.',
+    bctaSub: 'Studio + Plugin · Emulador mobile · No seu ritmo',
+    bctaBtn: 'Começar agora',
+    fabColor: '#E63946',
+    fabAvBg: '#E63946',
+    sys: `Voce e o Guia de criacao da Expedicao Roblox para jovens de 16 a 18 anos. A jornada de aprender a criar tem dois caminhos: PC (Roblox Studio gratis + plugin com tutoriais interativos) ou celular (emulador mobile que salva e ativa no Studio depois). Nao precisa de experiencia previa. A pessoa aprende criando, nao assistindo. Sem prazo. Quando pronta, pode entrar na Game Jam.`,
+    questions: [
+      {text:'Você vai acessar pelo celular ou pelo PC?', opts:['Pelo celular','Pelo PC ou Mac','Tenho os dois']},
+      {text:'Você já jogou Roblox antes?', opts:['Jogo até hoje','Jogava antes, parei','Nunca joguei']},
+      {text:'Já tentou criar algo no Roblox?', opts:['Sim, já criei','Nunca tentei','Tentei mas travei']},
+    ],
+    explain: {
+      title:'O que acontece quando você começa:',
+      items:['Você baixa o Roblox Studio grátis (PC) ou abre o emulador mobile','Instala nosso plugin com tutoriais interativos dentro do Studio','Cada tutorial termina com algo real publicado no Roblox','Você avança no seu ritmo, sem prazo nem pressão','Quando estiver pronto, pode entrar na Game Jam e concorrer a 10.000 Robux'],
+      btn:'Começar a criar agora →'
+    }
+  }
+};
+
+// ── STATE ──
+let currentJ = 'jam';
+let currentDevice = 'd';
+const chatState = {
+  D: {msgs:[], load:false, open:false, answered:[], cidade:null},
+  M: {msgs:[], load:false, open:false, answered:[], cidade:null},
+};
+
+// ── PAGE HTML GENERATOR ──
+function genPage(j, isMobile) {
+  const jd = JORNADAS[j];
+  const cl = isMobile ? 'mobile' : 'desktop';
+  const ac = jd.color;
+
+  let cd = '';
+  if(jd.showCountdown) {
+    cd = `<div class="cd-bar" style="border-bottom-color:${ac}">
+      <div class="cd-pre">Encerra em</div>
+      <div class="cd-timer">
+        <div class="cd-unit"><span class="cd-num p-days">--</span><div class="cd-lbl">dias</div></div>
+        <div class="cd-sep" style="color:${ac}">:</div>
+        <div class="cd-unit"><span class="cd-num p-hours">--</span><div class="cd-lbl">horas</div></div>
+        <div class="cd-sep" style="color:${ac}">:</div>
+        <div class="cd-unit"><span class="cd-num p-mins">--</span><div class="cd-lbl">min</div></div>
+        <div class="cd-sep" style="color:${ac}">:</div>
+        <div class="cd-unit"><span class="cd-num p-secs">--</span><div class="cd-lbl">seg</div></div>
+      </div>
+      <button class="cd-btn" style="background:${ac};color:#0A0A0A">Participar agora →</button>
+    </div>`;
+  }
+
+  const nextCards = isMobile ? jd.mobileNextCards : jd.nextCards;
+
+  let nsHTML = nextCards.map(nc => {
+    let extra = '';
+    if(nc.hasEmail && isMobile) {
+      extra = `<div class="email-row" onclick="event.stopPropagation()">
+        <input type="email" placeholder="seu@email.com" id="emailInp"/>
+        <button onclick="saveEmail()">Enviar</button>
+      </div>`;
+    }
+    return `<div class="ns${nc.primary?' primary':''}" style="${nc.primary?`background:${ac}`:''}">
+      <div class="ns-ic" style="color:${nc.primary?'#0A0A0A':ac}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${nc.primary?'<rect x="2" y="3" width="20" height="14"/><path d="M8 21h8M12 17v4"/>':'<rect x="5" y="2" width="14" height="20"/><path d="M12 18h.01"/>'}</svg>
+      </div>
+      <div class="ns-title">${nc.title}</div>
+      <div class="ns-sub">${nc.sub}</div>
+      ${extra}
+      <button class="ns-btn" style="${nc.primary?`background:#0A0A0A;color:#fff`:''}">${nc.btn}</button>
+    </div>`;
+  }).join('');
+
+  const whyHTML = jd.why.map((w,i) => `
+    <div class="why-item">
+      <div class="why-ic" style="color:${ac}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          ${['<rect x="2" y="3" width="20" height="14"/><path d="M8 21h8M12 17v4"/>',
+             '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+             '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+             '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>'][i]}
+        </svg>
+      </div>
+      <div class="why-title">${w.title}</div>
+      <div class="why-sub">${w.sub}</div>
+    </div>`).join('');
+
+  return `<div class="${cl}" style="--ac-color:${ac}">
+    <div class="page-nav">
+      <div class="pn-logo">ROBLOX</div>
+      <div class="pn-sep"></div>
+      <div class="pn-sub">${jd.pnSub}</div>
+      <div class="pn-spacer"></div>
+      <div class="pn-date">${jd.pnDate}</div>
+      <button class="pn-cta" style="background:${ac};color:#0A0A0A">${jd.pnCtaTxt}</button>
+    </div>
+    ${cd}
+    <div class="hero">
+      <div class="hero-ey"><div class="hero-ey-line" style="background:${ac}"></div><div class="hero-ey-txt">${jd.heroEy}</div></div>
+      <h1 class="hero-h1">
+        ${jd.heroH1.map(l=>`<span class="ac">${l}</span>`).join('')}
+        <span class="ac" style="color:${ac}">${jd.heroH1ac}</span>
+      </h1>
+      <div class="hero-bot">
+        <p class="hero-desc">${jd.heroDesc}</p>
+        <div class="hero-acts">
+          <button class="btn-main" style="background:${ac};color:#0A0A0A">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            ${jd.heroCtaTxt}
+          </button>
+          <button class="btn-sec">Como funciona ↓</button>
+        </div>
+      </div>
+    </div>
+    <div class="vblock">
+      <div class="vph" style="--vac:${ac}">
+        <div class="vph-play" style="border-color:${ac}60;color:${ac}">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+        <div class="vph-t">Veja como funciona — ${jd.label}</div>
+        <div class="vph-s">Placeholder · substitua pelo ID do YouTube</div>
+      </div>
+    </div>
+    <div class="why">
+      <div class="sec-lbl">${jd.whyTitle}</div>
+      <div class="why-grid">${whyHTML}</div>
+    </div>
+    <div class="next">
+      <div class="next-lbl">${jd.nextTitle}</div>
+      <div class="next-grid">${nsHTML}</div>
+    </div>
+    <div class="bcta" style="border-top:2px solid ${ac}">
+      <div>
+        <div class="bc-title">${jd.bctaTitle}<br><span style="color:${ac}">${jd.bctaAc}</span></div>
+        <div class="bc-sub">${jd.bctaSub}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <button class="bc-btn" style="background:${ac};color:#0A0A0A">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          ${jd.bctaBtn}
+        </button>
+        <div class="bc-note">Grátis · sem experiência prévia</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── RENDER ──
+function renderPages() {
+  document.getElementById('pageContent').innerHTML = genPage(currentJ, false);
+  document.getElementById('mPageContent').innerHTML = genPage(currentJ, true);
+  updateCountdown();
+}
+
+// ── JORNADA SWITCH ──
+function setJ(j) {
+  currentJ = j;
+  const jd = JORNADAS[j];
+
+  document.querySelectorAll('.jbtn').forEach(b => b.classList.toggle('on', b.dataset.j === j));
+  document.getElementById('burl').textContent = jd.url;
+  document.getElementById('navJornada').innerHTML = jd.navTag;
+  document.getElementById('shellNav').style.borderBottomColor = jd.color;
+
+  // update fab colors
+  ['D','M'].forEach(id => {
+    document.getElementById('fabBtn'+id).style.background = jd.color;
+    document.getElementById('cw'+id).querySelector('.cw-av').style.background = jd.color;
+    document.getElementById('cw'+id).querySelector('.cw-av').style.color = '#0A0A0A';
+  });
+
+  // reset chat
+  ['D','M'].forEach(id => {
+    chatState[id].msgs = [];
+    chatState[id].answered = [];
+    chatState[id].cidade = null;
+    document.getElementById('msgs'+id).innerHTML = '';
+    if(chatState[id].open) {
+      chatState[id].open = false;
+      document.getElementById('cw'+id).classList.remove('open');
+      document.getElementById('blur'+id).classList.remove('on');
+      document.getElementById('badge'+id).style.display = 'flex';
+    }
+  });
+
+  renderPages();
+  window.scrollTo(0,0);
+}
+
+// ── DEVICE SWITCH ──
+function setDevice(d) {
+  currentDevice = d;
+  document.getElementById('vD').classList.toggle('on', d==='d');
+  document.getElementById('vM').classList.toggle('on', d==='m');
+  document.getElementById('stD').classList.toggle('on', d==='d');
+  document.getElementById('stM').classList.toggle('on', d==='m');
+}
+
+// ── COUNTDOWN ──
+function updateCountdown() {
+  const diff = JAM_END - new Date();
+  if(diff < 0) return;
+  const pad = n => String(Math.max(0,n)).padStart(2,'0');
+  const d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000),
+        m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+  document.querySelectorAll('.p-days').forEach(e=>e.textContent=pad(d));
+  document.querySelectorAll('.p-hours').forEach(e=>e.textContent=pad(h));
+  document.querySelectorAll('.p-mins').forEach(e=>e.textContent=pad(m));
+  document.querySelectorAll('.p-secs').forEach(e=>e.textContent=pad(s));
+}
+setInterval(updateCountdown, 1000);
+
+// ── CHAT ──
+function toggleChat(id) {
+  const s = chatState[id];
+  s.open = !s.open;
+  document.getElementById('cw'+id).classList.toggle('open', s.open);
+  document.getElementById('blur'+id).classList.toggle('on', s.open);
+  document.getElementById('badge'+id).style.display = s.open ? 'none' : 'flex';
+  if(s.open && s.msgs.length === 0) startAnamnese(id);
+  const el = document.getElementById('msgs'+id);
+  if(el) el.scrollTop = el.scrollHeight;
+}
+
+function startAnamnese(id) {
+  const jd = JORNADAS[currentJ];
+  const s = chatState[id];
+  // first question
+  const q = jd.questions[0];
+  renderQ(q, id, 0);
+}
+
+function renderQ(q, id, idx) {
+  const el = document.getElementById('msgs'+id);
+  const wrap = document.createElement('div');
+  let optsHTML = (q.opts||[]).map(o =>
+    `<button class="cw-opt" onclick="answerQ('${o.replace(/'/g,"\\'")}',${idx},'${id}',${q.cidade||false})">${o}</button>`
+  ).join('');
+  wrap.innerHTML = `<div class="cmsg ai"><div class="cmav" style="background:${JORNADAS[currentJ].color};color:#0A0A0A">EX</div><div class="cmbub">${q.text}</div></div><div class="cw-opts">${optsHTML}</div>`;
+  el.appendChild(wrap);
+  el.scrollTop = el.scrollHeight;
+}
+
+function answerQ(opt, idx, id, isCidade) {
+  const jd = JORNADAS[currentJ];
+  const s = chatState[id];
+  const el = document.getElementById('msgs'+id);
+
+  // disable opts
+  el.querySelectorAll('.cw-opt').forEach(b => b.disabled = true);
+
+  // user bubble
+  const ub = document.createElement('div'); ub.className = 'cmsg u';
+  ub.innerHTML = `<div class="cmav" style="background:${jd.color};color:#0A0A0A">VC</div><div class="cmbub" style="background:${jd.color};color:#0A0A0A">${opt}</div>`;
+  el.appendChild(ub);
+
+  s.answered.push({idx, opt});
+
+  // detect cidade
+  if(isCidade) {
+    const cidadeMap = {'São Paulo':'sp','Rio de Janeiro':'rj','Recife':'recife','Porto Alegre':'poa','Manaus':'manaus','Brasília':'brasilia','Brasilia':'brasilia'};
+    s.cidade = cidadeMap[opt] || 'outra';
+  }
+
+  const nextIdx = idx + 1;
+  if(nextIdx < jd.questions.length) {
+    setTimeout(() => {
+      // if q1b needed (jam: nao sabe o que é jam)
+      if(currentJ === 'jam' && idx === 0 && (opt === 'Mais ou menos' || opt === 'Não sei')) {
+        const explainMsg = document.createElement('div'); explainMsg.className = 'cmsg ai';
+        explainMsg.innerHTML = `<div class="cmav" style="background:${jd.color};color:#0A0A0A">EX</div><div class="cmbub">Uma Game Jam é uma competição onde você cria um game do zero em um prazo. A nossa tem 10.000 Robux em prêmios e termina em 24/04.</div>`;
+        el.appendChild(explainMsg); el.scrollTop = el.scrollHeight;
+        setTimeout(() => { renderQ(jd.questions[nextIdx], id, nextIdx); el.scrollTop = el.scrollHeight; }, 600);
+      } else {
+        renderQ(jd.questions[nextIdx], id, nextIdx);
+        el.scrollTop = el.scrollHeight;
+      }
+    }, 300);
+  } else {
+    // show result
+    setTimeout(() => showResult(id), 400);
+  }
+}
+
+function showResult(id) {
+  const jd = JORNADAS[currentJ];
+  const s = chatState[id];
+  const el = document.getElementById('msgs'+id);
+  const temEvento = CIDADES_EVENTO.includes(s.cidade);
+
+  let resultText = '';
+  let choices = [];
+
+  if(currentJ === 'jam') {
+    const criou = s.answered.find(a => a.idx === 1 || a.idx === 0)?.opt;
+    if(criou && criou.includes('criou')) resultText = 'Você já tem experiência. Hora de usar isso na Jam.';
+    else if(criou && criou.includes('travei')) resultText = 'Travar faz parte. Na Jam você tem suporte pra desbloquear.';
+    else resultText = 'Não precisa de experiência. A Jam é feita pra quem está começando.';
+    choices = [
+      {action:'Entrar na Jam agora', target:'jam', explain:true},
+      {action:'Treinar antes de entrar', target:'treinar'},
+    ];
+    if(temEvento) choices.push({action:'Ver o evento presencial', target:'evento'});
+  } else if(currentJ === 'expo') {
+    const interesse = s.answered.find(a => a.idx === 2)?.opt || '';
+    resultText = `Perfeito${temEvento ? ' — tem evento na sua cidade' : ''}. ${interesse ? 'Boa escolha de foco.' : 'Vamos garantir sua vaga.'}`;
+    choices = [
+      {action:'Garantir minha vaga', target:'evento', explain:true},
+      {action:'Aprender antes de ir', target:'treinar'},
+    ];
+    if(!temEvento) choices = [{action:'Entrar na lista de espera', target:'espera'}, {action:'Aprender a criar online', target:'treinar'}];
+  } else {
+    const device = s.answered.find(a => a.idx === 0)?.opt || '';
+    const mobile = device.includes('celular');
+    resultText = mobile ? 'No celular você começa pelo emulador. Fácil de usar e já conecta com o Studio depois.' : 'No PC você tem o caminho completo: Studio + nosso plugin com tutoriais interativos.';
+    choices = mobile
+      ? [{action:'Abrir emulador mobile', target:'app'}, {action:'Quando tiver PC: baixar Studio', target:'studio'}]
+      : [{action:'Baixar Studio + Plugin', target:'studio'}, {action:'Só tenho celular', target:'app'}];
+  }
+
+  const wrap = document.createElement('div');
+  const btnsHTML = choices.map(c => {
+    const isPrimary = choices.indexOf(c) === 0;
+    const style = isPrimary ? `background:${jd.color};color:#0A0A0A` : `background:#F0F0F0;color:#0A0A0A`;
+    return `<button class="cw-rbtn" style="${style}" onclick="handleChoice('${c.target}','${c.explain||false}','${id}')">${c.action}</button>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <div class="cmsg ai"><div class="cmav" style="background:${jd.color};color:#0A0A0A">EX</div><div class="cmbub">${resultText}</div></div>
+    <div class="cw-results">
+      ${btnsHTML}
+      <button class="cw-restart" onclick="restartChat('${id}')">↺ Recomeçar</button>
+    </div>`;
+  el.appendChild(wrap);
+  el.scrollTop = el.scrollHeight;
+}
+
+function handleChoice(target, hasExplain, id) {
+  const jd = JORNADAS[currentJ];
+  const el = document.getElementById('msgs'+id);
+  el.querySelectorAll('.cw-rbtn').forEach(b => {b.disabled=true; b.style.opacity='.4';});
+
+  // Primary action on expo and aprender always shows explain screen
+  const showEx = hasExplain === 'true' || 
+    (currentJ === 'expo' && target === 'evento') ||
+    (currentJ === 'aprender' && (target === 'studio' || target === 'app'));
+
+  if(showEx && jd.explain) {
+    showExplain(id, jd.explain, jd.color);
+  } else {
+    const msgs = {
+      treinar:'Para treinar, baixe o Roblox Studio grátis (PC) ou abra o emulador mobile. Nosso plugin tem tutoriais interativos. Quando estiver pronto, a Jam te espera.',
+      evento:'Vamos te levar para a página de inscrição do evento! <span style="opacity:.4;font-size:11px">(link real aqui)</span>',
+      espera:'Vamos te colocar na lista de espera e avisar quando tiver vagas na sua região. <span style="opacity:.4;font-size:11px">(link real aqui)</span>',
+      studio:'Mandando para o download do Roblox Studio + Plugin! <span style="opacity:.4;font-size:11px">(link real aqui)</span>',
+      app:'Abrindo o emulador mobile! <span style="opacity:.4;font-size:11px">(link real aqui)</span>',
+      jam:'Mandando você para a Game Jam! Entra no Discord e começa a criar. <span style="opacity:.4;font-size:11px">(link real aqui)</span>',
+    };
+    const d = document.createElement('div'); d.className = 'cmsg ai';
+    d.innerHTML = `<div class="cmav" style="background:${jd.color};color:#0A0A0A">EX</div><div class="cmbub">${msgs[target]||'Redirecionando...'}</div>`;
+    el.appendChild(d); el.scrollTop = el.scrollHeight;
+  }
+}
+
+function showExplain(id, explain, color) {
+  const el = document.getElementById('msgs'+id);
+  const wrap = document.createElement('div'); wrap.className = 'cw-explain';
+  const itemsHTML = explain.items.map((it,i) =>
+    `<div class="cw-ex-item"><div class="cw-ex-num" style="background:${color};color:#0A0A0A">${i+1}</div><span>${it}</span></div>`
+  ).join('');
+  wrap.innerHTML = `
+    <div class="cw-ex-title">${explain.title}</div>
+    <div class="cw-ex-list">${itemsHTML}</div>
+    <button class="cw-go-btn" style="background:${color};color:#0A0A0A">${explain.btn}</button>
+    <button class="cw-back" onclick="this.closest('.cw-explain').remove()">← Voltar e escolher outro caminho</button>`;
+  el.appendChild(wrap); el.scrollTop = el.scrollHeight;
+}
+
+function restartChat(id) {
+  chatState[id].msgs = [];
+  chatState[id].answered = [];
+  chatState[id].cidade = null;
+  document.getElementById('msgs'+id).innerHTML = '';
+  startAnamnese(id);
+}
+
+function saveEmail() {
+  const inp = document.getElementById('emailInp');
+  if(!inp || !inp.value.trim()) return;
+  const email = inp.value.trim();
+  const id = currentDevice === 'd' ? 'D' : 'M';
+  const el = document.getElementById('msgs'+id);
+  const jd = JORNADAS[currentJ];
+  const d = document.createElement('div'); d.className = 'cmsg ai';
+  d.innerHTML = `<div class="cmav" style="background:${jd.color};color:#0A0A0A">EX</div><div class="cmbub">Anotado! O link do Studio chega em <strong>${email}</strong> quando você estiver no PC.</div>`;
+  el.appendChild(d); el.scrollTop = el.scrollHeight;
+  inp.value = '';
+}
+
+// ── INIT ──
+setJ('jam');
+setDevice('d');
+</script>
+</body>
+</html>
