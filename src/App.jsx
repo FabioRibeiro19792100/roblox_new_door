@@ -778,39 +778,40 @@ function App() {
 
   return (
     <div>
-      <div className="shell-nav" style={{ borderBottomColor: jornada.color }}>
-        <div className="nav-logo">
-          <img src={expeditionLogo} alt="Expedição Roblox" className="nav-logo-img" />
+      <div className="shell-nav">
+        <div className="nav-row nav-jornadas">
+          {Object.entries(JORNADAS).map(([key, value]) => (
+            <button
+              key={key}
+              className={`jbtn ${currentJ === key ? "on" : ""}`}
+              data-j={key}
+              onClick={() => setCurrentJ(key)}
+            >
+              <span className="nav-btn-inner">
+                <TopJourneyIcon journeyKey={key} />
+                <span>{value.label}</span>
+              </span>
+            </button>
+          ))}
         </div>
-        <div className="nav-controls">
-          <div className="nav-segment nav-jornadas">
-            {Object.entries(JORNADAS).map(([key, value]) => (
-              <button
-                key={key}
-                className={`jbtn ${currentJ === key ? "on" : ""}`}
-                data-j={key}
-                onClick={() => setCurrentJ(key)}
-              >
-                {value.navTag}
-              </button>
-            ))}
-          </div>
-          <div className="nav-segment shell-toggle">
-            <button
-              className={`stbtn ${currentDevice === "d" ? "on" : ""}`}
-              onClick={() => setPreviewDevice("d")}
-            >
-              Desktop
-            </button>
-            <button
-              className={`stbtn ${currentDevice === "m" ? "on" : ""}`}
-              onClick={() => setPreviewDevice("m")}
-            >
-              Mobile
-            </button>
-          </div>
-          <button className="test-dock-link" onClick={() => setHasStarted(false)}>
-            Trocar jornada
+        <div className="nav-row nav-modes">
+          <button
+            className={`stbtn ${currentDevice === "d" ? "on" : ""}`}
+            onClick={() => setPreviewDevice("d")}
+          >
+            <span className="nav-btn-inner">
+              <TopDeviceIcon device="desktop" />
+              <span>Desktop</span>
+            </span>
+          </button>
+          <button
+            className={`stbtn ${currentDevice === "m" ? "on" : ""}`}
+            onClick={() => setPreviewDevice("m")}
+          >
+            <span className="nav-btn-inner">
+              <TopDeviceIcon device="mobile" />
+              <span>Mobile</span>
+            </span>
           </button>
         </div>
       </div>
@@ -1808,6 +1809,56 @@ function ChatIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+function TopJourneyIcon({ journeyKey }) {
+  if (journeyKey === "jam") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+        <path d="M8 7h8" />
+        <path d="M9 7V5h6v2" />
+        <path d="M7 11h10l-1 8H8l-1-8Z" />
+      </svg>
+    );
+  }
+
+  if (journeyKey === "expo") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+        <path d="M12 20s5-5.4 5-9a5 5 0 1 0-10 0c0 3.6 5 9 5 9Z" />
+        <path d="M12 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <path d="M8 6.5h8" />
+      <path d="M8 10h8" />
+      <path d="M9 17h6" />
+      <rect x="6.5" y="4.5" width="11" height="15" rx="2.5" />
+    </svg>
+  );
+}
+
+function TopDeviceIcon({ device }) {
+  if (device === "desktop") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+        <rect x="4" y="5" width="16" height="10" rx="1.8" />
+        <path d="M10 19h4" />
+        <path d="M12 15v4" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <rect x="8" y="3.5" width="8" height="17" rx="2.2" />
+      <path d="M11 6.5h2" />
+      <path d="M11 17.5h2" />
     </svg>
   );
 }
