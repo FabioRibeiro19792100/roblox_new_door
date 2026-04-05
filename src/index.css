@@ -156,8 +156,17 @@ button,input{font:inherit;}
 .cd-sep{font-family:"Space Grotesk",sans-serif;font-size:36px;font-weight:700;opacity:.4;margin-right:20px;line-height:1.1;}
 .cd-btn{font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:700;padding:10px 24px;border:none;cursor:pointer;margin-left:auto;background:var(--jam);color:var(--blk);}
 
+.site-prompt-top{--site-prompt-text:#0A0A0A;--site-prompt-text-soft:rgba(10,10,10,.72);position:sticky;top:0;z-index:12;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 32px;}
+.site-prompt-copy{font-size:14px;font-weight:700;color:var(--site-prompt-text-soft);line-height:1.3;}
+.site-prompt-main{display:inline-flex;align-items:center;gap:8px;border:none;background:transparent;padding:0;cursor:pointer;min-width:0;flex:1;}
+.site-prompt-actions{display:flex;align-items:center;justify-content:center;width:20px;height:20px;flex-shrink:0;color:var(--site-prompt-text);}
+.site-prompt-actions svg{width:17px;height:17px;stroke-width:1.7;}
+.site-prompt-main:hover{transform:translateY(-1px);}
+.site-prompt-close{width:28px;height:28px;border:none;border-radius:999px;background:#0A0A0A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.site-prompt-close svg{width:12px;height:12px;stroke-width:2;}
+
 .hero{padding:64px 32px 56px;border-bottom:1px solid var(--gray2);position:relative;}
-.hero-mascot-wrap{position:absolute;top:28px;right:32px;pointer-events:none;opacity:.95;}
+.hero-mascot-wrap{position:absolute;top:28px;right:32px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;opacity:.95;}
 .hero-mascot{width:72px;height:72px;}
 .hero-ey{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
 .hero-ey-line{width:32px;height:2px;}
@@ -244,7 +253,7 @@ button,input{font:inherit;}
 .email-row button{background:var(--blk);border:none;padding:12px 16px;color:#fff;font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
 
 .fab-wrap{position:absolute;right:16px;top:50%;transform:translateY(-50%);z-index:120;display:flex;flex-direction:column;align-items:flex-end;}
-.mobile-chat-wrap{position:absolute;right:10px;bottom:10px;z-index:120;display:flex;flex-direction:column;align-items:flex-end;}
+.mobile-chat-wrap{position:absolute;right:10px;bottom:44px;z-index:120;display:flex;flex-direction:column;align-items:flex-end;}
 .fab-btn{width:48px;height:48px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 4px 16px rgba(0,0,0,.15),0 0 24px color-mix(in srgb,var(--fab-glow, #F5B731) 26%, transparent);transition:all .2s;background:var(--blk);}
 .fab-btn::before{content:"";position:absolute;inset:-12px;border-radius:22px;background:radial-gradient(circle,color-mix(in srgb,var(--fab-glow, #F5B731) 34%, transparent) 0%,color-mix(in srgb,var(--fab-glow, #F5B731) 18%, transparent) 38%,rgba(255,255,255,0) 72%);opacity:.9;pointer-events:none;animation:fabricGlow 2.8s ease-in-out infinite;}
 .fab-btn-combo{width:48px;height:48px;padding:0;background:transparent;}
@@ -318,6 +327,13 @@ button,input{font:inherit;}
 .mobile .cd-num{font-size:28px;letter-spacing:-1px;}
 .mobile .cd-sep{font-size:22px;margin-right:12px;}
 .mobile .cd-unit{margin-right:12px;}
+.mobile .site-prompt-top{padding:13px 12px;}
+.mobile .site-prompt-copy{font-size:10px;font-weight:700;text-align:left;white-space:nowrap;flex:1;min-width:0;letter-spacing:0;}
+.mobile .site-prompt-main{gap:6px;}
+.mobile .site-prompt-actions{width:17px;height:17px;}
+.mobile .site-prompt-actions svg{width:14px;height:14px;}
+.mobile .site-prompt-close{width:24px;height:24px;}
+.mobile .site-prompt-close svg{width:11px;height:11px;}
 .mobile .hero{padding:22px 14px 20px;}
 .mobile .hero-mascot-wrap{top:16px;right:14px;}
 .mobile .hero-mascot{width:44px;height:44px;}
@@ -336,6 +352,8 @@ button,input{font:inherit;}
 .mobile .nav-row{gap:10px;}
 .mobile .nav-device-box{padding:2px 7px;gap:5px;}
 .mobile .nav-font-box{padding:2px 7px;gap:5px;}
+.mobile .nav-site-link{width:22px;height:22px;}
+.mobile .nav-site-link svg{width:14px;height:14px;}
 .mobile .stbtn,.mobile .jbtn{font-size:10px;}
 .mobile .nav-mascot{width:16px;height:16px;}
 .mobile .nav-btn-inner{gap:5px;}

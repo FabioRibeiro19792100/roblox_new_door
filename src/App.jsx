@@ -23,21 +23,21 @@ const JORNADAS = {
     heroH1: ["Crie experiências", "incríveis."],
     heroH1ac: "Demonstre seu talento.",
     heroDesc:
-      "A Game Jam é o momento de transformar sua ideia em game — <strong>sem precisar saber programar. Do zero.</strong>",
+      "A Game Jam é o momento de transformar sua ideia em game. <strong>Você pode começar do zero e criar com recursos visuais.</strong>",
     heroCtaTxt: "Entre na comunidade para participar",
     heroTarget: "community",
     whyTitle: "Participar é simples",
     why: [
       {
-        title: "Não precisa programar",
-        sub: "Roblox Studio é visual. Arrasta, encaixa, testa. Como Lego — vira um game real.",
+        title: "Criação visual desde o começo",
+        sub: "Roblox Studio é visual. Arrasta, encaixa, testa. Como Lego. Sua ideia vira um game real.",
       },
       {
         title: "Começa do zero hoje",
         sub: "Baixa o Studio grátis, entra no Discord e já tem mentores prontos.",
       },
       {
-        title: "Não vai estar sozinho",
+        title: "Você cria com companhia",
         sub: "Outros criadores no mesmo momento. Dúvida? Alguém responde.",
       },
       {
@@ -89,7 +89,7 @@ const JORNADAS = {
     ],
     bctaTitle: "Pronto pra criar?",
     bctaAc: "Entra na Jam.",
-    bctaSub: "Comunidade no Discord · Encerra 24/04",
+    bctaSub: "",
     bctaBtn: "Entre na comunidade para participar",
     bctaTarget: "community",
     fabColor: "#F5B731",
@@ -168,7 +168,7 @@ const JORNADAS = {
     heroH1: ["Aprenda a criar", "experiências digitais."],
     heroH1ac: "Na prática. Com especialistas.",
     heroDesc:
-      "Um evento presencial nas capitais brasileiras. Você aprende a criar games com Roblox Studio guiado por profissionais de educação, tecnologia e games — <strong>e conecta essa habilidade com o mercado.</strong>",
+      "Um evento presencial nas capitais brasileiras. Você aprende a criar games com Roblox Studio guiado por profissionais de educação, tecnologia e games. <strong>E conecta essa habilidade com o mercado.</strong>",
     heroCtaTxt: "Garantir minha vaga",
     whyTitle: "O que acontece no evento",
     why: [
@@ -284,12 +284,12 @@ const JORNADAS = {
     heroH1: ["Crie seu primeiro", "game no Roblox."],
     heroH1ac: "Do zero. No seu ritmo.",
     heroDesc:
-      "Baixe o Roblox Studio, instale nosso plugin com tutoriais e comece a criar. Se estiver no celular, use nosso emulador mobile — <strong>você aprende criando, não assistindo.</strong>",
+      "Baixe o Roblox Studio, instale nosso plugin com tutoriais e comece a criar. No celular, use nosso emulador mobile. <strong>Você aprende criando em cada etapa.</strong>",
     heroCtaTxt: "Começar a criar",
     whyTitle: "Como funciona",
     why: [
       {
-        title: "Não precisa de experiência",
+        title: "Perfeito para começar",
         sub: "O Studio é visual e intuitivo. Nosso plugin guia cada passo com tutoriais interativos.",
       },
       {
@@ -436,6 +436,7 @@ function App() {
   const [mockDestination, setMockDestination] = useState(null);
   const [pendingRedirect, setPendingRedirect] = useState(null);
   const [deviceIntro, setDeviceIntro] = useState(null);
+  const [sitePromptDismissed, setSitePromptDismissed] = useState({ D: false, M: false });
 
   const jornada = useMemo(() => JORNADAS[currentJ], [currentJ]);
   const currentDevice = previewDevice || autoDevice;
@@ -464,6 +465,7 @@ function App() {
       M: startAnamnese({ ...initialChat(), open: true }, currentJ),
     });
     setEmail("");
+    setSitePromptDismissed({ D: false, M: false });
     window.scrollTo(0, 0);
   }, [currentJ]);
 
@@ -990,6 +992,10 @@ function App() {
                   saveEmail={saveEmail}
                   onCardAction={handleCardAction}
                   onPrimaryAction={setPendingRedirect}
+                  showSitePrompt={!sitePromptDismissed.D}
+                  onDismissSitePrompt={() =>
+                    setSitePromptDismissed((prev) => ({ ...prev, D: true }))
+                  }
                 />
               </div>
               <ChatWidget
@@ -1026,6 +1032,10 @@ function App() {
                   saveEmail={saveEmail}
                   onCardAction={handleCardAction}
                   onPrimaryAction={setPendingRedirect}
+                  showSitePrompt={!sitePromptDismissed.M}
+                  onDismissSitePrompt={() =>
+                    setSitePromptDismissed((prev) => ({ ...prev, M: true }))
+                  }
                 />
               </div>
               <ChatWidget
@@ -1148,6 +1158,12 @@ function MockDestinationScreen({ destination, onBack }) {
       body: "Esta e uma tela simulada do mock para representar a saida da jornada para a inscricao do evento presencial.",
       button: "Voltar para a jornada",
     },
+    site: {
+      label: "Site completo",
+      title: "Voce foi para o site completo da Expedicao.",
+      body: "Esta e uma tela simulada do mock para representar a saida da jornada guiada para o site completo.",
+      button: "Voltar para a jornada",
+    },
   };
 
   const screen = screens[destination];
@@ -1192,6 +1208,12 @@ function RedirectConfirmScreen({ destination, onConfirm, onCancel }) {
       body: "Voce vai sair desta jornada guiada e entrar na tela simulada da inscricao do evento presencial.",
       confirm: "Ir para a inscricao",
     },
+    site: {
+      label: "Site completo",
+      title: "Posso te redirecionar para o site completo agora?",
+      body: "Voce vai sair desta jornada guiada e entrar na tela simulada do site completo da Expedicao.",
+      confirm: "Ir para o site completo",
+    },
   };
 
   const screen = copy[destination];
@@ -1215,7 +1237,18 @@ function RedirectConfirmScreen({ destination, onConfirm, onCancel }) {
   );
 }
 
-function PageContent({ jornada, countdown, isMobile, email, setEmail, saveEmail, onCardAction, onPrimaryAction }) {
+function PageContent({
+  jornada,
+  countdown,
+  isMobile,
+  email,
+  setEmail,
+  saveEmail,
+  onCardAction,
+  onPrimaryAction,
+  showSitePrompt,
+  onDismissSitePrompt,
+}) {
   const cards = isMobile ? jornada.mobileNextCards : jornada.nextCards;
   const viewKey = isMobile ? "mobile" : "desktop";
   const explainSectionId = `why-${jornada.pnSub.toLowerCase()}-${viewKey}`;
@@ -1230,6 +1263,27 @@ function PageContent({ jornada, countdown, isMobile, email, setEmail, saveEmail,
 
   return (
     <div className={isMobile ? "mobile" : "desktop"} style={{ "--ac-color": jornada.color }}>
+      {showSitePrompt ? (
+        <div
+          className="site-prompt-top"
+          style={{
+            background: jornada.color,
+            "--site-prompt-text": jornada.label === "Aprender" ? "#FFFFFF" : "#0A0A0A",
+            "--site-prompt-text-soft":
+              jornada.label === "Aprender" ? "rgba(255,255,255,.82)" : "rgba(10,10,10,.72)",
+          }}
+        >
+          <button className="site-prompt-main" type="button" onClick={() => onPrimaryAction("site")} aria-label="Ver site completo da Expedição">
+            <span className="site-prompt-actions">
+              <TopSiteIcon />
+            </span>
+            <span className="site-prompt-copy">Clique para ver o site completo da Expedição</span>
+          </button>
+          <button className="site-prompt-close" type="button" onClick={onDismissSitePrompt} aria-label="Fechar aviso">
+            <CloseIcon />
+          </button>
+        </div>
+      ) : null}
       {jornada.showCountdown ? (
         <div className="cd-bar" style={{ borderBottomColor: jornada.color }}>
           <div className="cd-pre">Encerra em</div>
@@ -1266,7 +1320,17 @@ function PageContent({ jornada, countdown, isMobile, email, setEmail, saveEmail,
         </div>
         <div className="hero-ey">
           <div className="hero-ey-line" style={{ background: jornada.color }} />
-          <div className="hero-ey-txt">{jornada.heroEy}</div>
+          <div className="hero-ey-txt">
+            {isMobile && jornada.label === "Expedição" ? (
+              <>
+                Expedição Roblox
+                <br />
+                Evento Presencial
+              </>
+            ) : (
+              jornada.heroEy
+            )}
+          </div>
         </div>
         <h1 className="hero-h1">
           {jornada.heroH1.map((line) => (
@@ -1945,7 +2009,7 @@ function resultMessage(currentJ, answered, cidade) {
 
   if (currentJ === "jam") {
     const criou = answered.find((answer) => answer.idx === 1 || answer.idx === 0)?.opt;
-    let text = "Não precisa de experiência. A Jam é feita pra quem está começando.";
+    let text = "A Jam foi feita para quem está começando. Você pode entrar e criar desde o início.";
     if (criou && criou.includes("criei")) {
       text = "Você já tem experiência. Hora de usar isso na Jam.";
     } else if (criou && criou.includes("travei")) {
@@ -1968,8 +2032,8 @@ function resultMessage(currentJ, answered, cidade) {
     if (!temEvento) {
       const recomendaJam = experiencia.includes("Já crio");
       const text = recomendaJam
-        ? "Ainda não tem evento na sua cidade. Como você já cria, o melhor próximo passo é entrar na Game Jam."
-        : "Ainda não tem evento na sua cidade. O melhor próximo passo é começar pela jornada Aprender a Criar e depois seguir para a Game Jam.";
+        ? "No momento, a Game Jam é o melhor próximo passo para você continuar criando."
+        : "No momento, o melhor próximo passo é começar pela jornada Aprender a Criar e depois seguir para a Game Jam.";
       return {
         type: "result",
         text,
@@ -1985,7 +2049,7 @@ function resultMessage(currentJ, answered, cidade) {
       };
     }
 
-    const text = `Perfeito${temEvento ? " — tem evento na sua cidade" : ""}. ${
+    const text = `Perfeito${temEvento ? ". Tem evento na sua cidade" : ""}. ${
       interesse ? "Boa escolha de foco." : "Vamos garantir sua vaga."
     }`;
     const choices = [
@@ -2154,6 +2218,25 @@ function HelpLinkIcon() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path d="M8 12h8" />
       <path d="M13 7l5 5-5 5" />
+    </svg>
+  );
+}
+
+function TopSiteIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M8 7H6.8C5.806 7 5 7.806 5 8.8V17.2C5 18.194 5.806 19 6.8 19H15.2C16.194 19 17 18.194 17 17.2V16" />
+      <path d="M11 13L19 5" />
+      <path d="M14 5H19V10" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M6 6l12 12" />
+      <path d="M18 6L6 18" />
     </svg>
   );
 }
