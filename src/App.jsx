@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import AnimatedLogo from "../index.jsx";
 
 const promoVideo = new URL("../Plugin Caxoro laramja-low.mp4", import.meta.url).href;
 const expeditionLogo = new URL("../logo-expedicao-colorido (1).png", import.meta.url).href;
@@ -17,7 +18,7 @@ const JORNADAS = {
     pnSub: "Game Jam",
     pnDate: "Encerra 24 / 04",
     pnCtaTxt: "Entrar na Jam →",
-    showCountdown: true,
+    showCountdown: false,
     heroEy: "Expedição Roblox · Game Jam",
     heroH1: ["Crie experiências", "incríveis."],
     heroH1ac: "Demonstre seu talento.",
@@ -225,6 +226,7 @@ const JORNADAS = {
     bctaAc: "Vagas limitadas.",
     bctaSub: "Evento presencial nas capitais brasileiras",
     bctaBtn: "Garantir minha vaga",
+    bctaTarget: "evento",
     fabColor: "#5BB8E8",
     questions: [
       {
@@ -347,7 +349,7 @@ const JORNADAS = {
     bctaTitle: "Comece a criar hoje.",
     bctaAc: "É grátis.",
     bctaSub: "Studio + Plugin · Emulador mobile · No seu ritmo",
-    bctaBtn: "Começar agora",
+    bctaBtn: "Escolher por onde começar",
     fabColor: "#E63946",
     questions: [
       {
@@ -417,20 +419,23 @@ const initialChat = () => ({
   answered: [],
   cidade: null,
   explanation: null,
-  flow: null,
+  flow: "general",
   collectEmailFor: null,
+  introSeen: false,
 });
 
 function App() {
   const [currentJ, setCurrentJ] = useState("jam");
   const [autoDevice, setAutoDevice] = useState("d");
   const [previewDevice, setPreviewDevice] = useState(null);
+  const [fontMode, setFontMode] = useState("default");
   const [chatState, setChatState] = useState({ D: initialChat(), M: initialChat() });
   const [email, setEmail] = useState("");
   const [countdown, setCountdown] = useState(getCountdown());
   const [hasStarted, setHasStarted] = useState(false);
   const [mockDestination, setMockDestination] = useState(null);
   const [pendingRedirect, setPendingRedirect] = useState(null);
+  const [deviceIntro, setDeviceIntro] = useState(null);
 
   const jornada = useMemo(() => JORNADAS[currentJ], [currentJ]);
   const currentDevice = previewDevice || autoDevice;
@@ -454,29 +459,67 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setChatState({ D: initialChat(), M: initialChat() });
+    setChatState({
+      D: startAnamnese({ ...initialChat(), open: true }, currentJ),
+      M: startAnamnese({ ...initialChat(), open: true }, currentJ),
+    });
     setEmail("");
     window.scrollTo(0, 0);
   }, [currentJ]);
+
+  useEffect(() => {
+    if (!deviceIntro) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      if (deviceIntro.mode === "start") {
+        setCurrentJ(deviceIntro.journeyKey);
+        setPreviewDevice(deviceIntro.deviceMode);
+        setHasStarted(true);
+      } else {
+        setPreviewDevice(deviceIntro.deviceMode);
+      }
+      setDeviceIntro(null);
+    }, 1900);
+
+    return () => window.clearTimeout(timer);
+  }, [deviceIntro]);
 
   function toggleChat(id) {
     setChatState((prev) => {
       const wasOpen = prev[id].open;
       const next = { ...prev };
+      const state = prev[id];
+      const isOnlyIntro =
+        state.flow === "general" &&
+        state.msgs.length === 1 &&
+        state.msgs[0]?.target === "general-intro";
 
       if (wasOpen) {
         next[id] = {
-          ...prev[id],
+          ...(isOnlyIntro ? { ...initialChat(), introSeen: true } : state),
           open: false,
         };
       } else {
-        next[id] = startAnamnese(
-          {
-            ...initialChat(),
+        const shouldResumeGeneral = state.flow === "general" && state.msgs.length > 0;
+
+        if (shouldResumeGeneral) {
+          next[id] = {
+            ...state,
             open: true,
-          },
-          currentJ
-        );
+          };
+        } else {
+          next[id] = startAnamnese(
+            {
+              ...initialChat(),
+              open: true,
+              introSeen: state.introSeen,
+            },
+            currentJ,
+            !state.introSeen
+          );
+        }
       }
 
       return next;
@@ -534,8 +577,45 @@ function App() {
   }
 
   function handleChoice(id, target, explain) {
+    if (target === "continue-general") {
+      setChatState((prev) => ({
+        ...prev,
+        [id]: {
+          ...prev[id],
+          flow: "general",
+          introSeen: true,
+          msgs: [
+            {
+              type: "highlight",
+              text: "Em 4 ou 5 perguntas eu entendo seu momento e te indico a melhor opção disponível para você agora.",
+            },
+            questionMessage(JORNADAS[currentJ].questions[0], 0),
+          ],
+        },
+      }));
+      return;
+    }
+
+    if (target === "browse-journey") {
+      setChatState((prev) => ({
+        ...prev,
+        [id]: {
+          ...initialChat(),
+          open: false,
+          flow: "general",
+          introSeen: true,
+        },
+      }));
+      return;
+    }
+
     if (target === "goto-jam") {
       setCurrentJ("jam");
+      return;
+    }
+
+    if (target === "goto-expo") {
+      setCurrentJ("expo");
       return;
     }
 
@@ -723,6 +803,28 @@ function App() {
     const id = isMobile ? "M" : "D";
     const focusedMessage = cardFocusMessage(currentJ, action);
 
+    if (isMobile && action === "studio") {
+      setChatState((prev) => ({
+        ...prev,
+        [id]: {
+          ...prev[id],
+          open: true,
+          answered: [],
+          cidade: null,
+          explanation: null,
+          flow: action,
+          collectEmailFor: "studio",
+          msgs: [
+            {
+              type: "ai",
+              text: "Como você está no celular, eu posso te mandar o link do Studio + Plugin por email para você abrir depois no PC ou Mac.",
+            },
+          ],
+        },
+      }));
+      return;
+    }
+
     if (action === "community" || action === "studio" || action === "app") {
       setPendingRedirect(action);
       return;
@@ -746,13 +848,48 @@ function App() {
 
     if (action === "chat") {
       toggleChat(id);
+      return;
+    }
+
+    if (action === "email") {
+      setChatState((prev) => ({
+        ...prev,
+        [id]: {
+          ...prev[id],
+          open: true,
+          answered: [],
+          cidade: null,
+          explanation: null,
+          flow: action,
+          msgs: [
+            {
+              type: "options",
+              text: "Se você está no celular agora, este card guarda o link do Studio para você abrir depois no PC ou Mac. Você pode preencher o email no próprio campo do card ou tirar uma dúvida rápida aqui.",
+              choices: [
+                { action: "Entendi, vou deixar meu email", target: "fechar-duvida-email" },
+                { action: "Ver caminho mobile", target: "duvida-app" },
+              ],
+            },
+          ],
+        },
+      }));
     }
   }
 
   function handleStart(journeyKey, deviceMode) {
-    setCurrentJ(journeyKey);
-    setPreviewDevice(deviceMode);
-    setHasStarted(true);
+    setDeviceIntro({ mode: "start", journeyKey, deviceMode });
+  }
+
+  function handleDevicePreviewChange(deviceMode) {
+    if (deviceMode === currentDevice) {
+      return;
+    }
+
+    setDeviceIntro({ mode: "switch", deviceMode });
+  }
+
+  if (deviceIntro) {
+    return <DeviceIntroScreen deviceMode={deviceIntro.deviceMode} />;
   }
 
   if (!hasStarted) {
@@ -777,9 +914,9 @@ function App() {
   }
 
   return (
-    <div>
+    <div className={fontMode === "inter" ? "font-mode-inter" : ""}>
       <div className="shell-nav">
-        <div className="nav-row nav-jornadas">
+        <div className="nav-row nav-topline">
           {Object.entries(JORNADAS).map(([key, value]) => (
             <button
               key={key}
@@ -793,26 +930,41 @@ function App() {
               </span>
             </button>
           ))}
-        </div>
-        <div className="nav-row nav-modes">
-          <button
-            className={`stbtn ${currentDevice === "d" ? "on" : ""}`}
-            onClick={() => setPreviewDevice("d")}
-          >
-            <span className="nav-btn-inner">
-              <TopDeviceIcon device="desktop" />
-              <span>Desktop</span>
-            </span>
-          </button>
-          <button
-            className={`stbtn ${currentDevice === "m" ? "on" : ""}`}
-            onClick={() => setPreviewDevice("m")}
-          >
-            <span className="nav-btn-inner">
-              <TopDeviceIcon device="mobile" />
-              <span>Mobile</span>
-            </span>
-          </button>
+          <div className="nav-device-box">
+            <button
+              className={`stbtn ${currentDevice === "d" ? "on" : ""}`}
+              onClick={() => handleDevicePreviewChange("d")}
+            >
+              <span className="nav-btn-inner">
+                <TopDeviceIcon device="desktop" />
+                <span>Desktop</span>
+              </span>
+            </button>
+            <button
+              className={`stbtn ${currentDevice === "m" ? "on" : ""}`}
+              onClick={() => handleDevicePreviewChange("m")}
+            >
+              <span className="nav-btn-inner">
+                <TopDeviceIcon device="mobile" />
+                <span>Mobile</span>
+              </span>
+            </button>
+          </div>
+          <div className="nav-font-box">
+            <button
+              className={`stbtn ${fontMode === "default" ? "on" : ""}`}
+              onClick={() => setFontMode("default")}
+            >
+              Atual
+            </button>
+            <button
+              className={`stbtn ${fontMode === "inter" ? "on" : ""}`}
+              onClick={() => setFontMode("inter")}
+            >
+              Inter
+            </button>
+          </div>
+          <Mascot className="nav-mascot" color={jornada.color} />
         </div>
       </div>
 
@@ -831,13 +983,13 @@ function App() {
               <div className="browser-body">
                 <PageContent
                   jornada={jornada}
-              countdown={countdown}
-              isMobile={false}
-              email={email}
-              setEmail={setEmail}
-              saveEmail={saveEmail}
-              onCardAction={handleCardAction}
-              onPrimaryAction={setMockDestination}
+                  countdown={countdown}
+                  isMobile={false}
+                  email={email}
+                  setEmail={setEmail}
+                  saveEmail={saveEmail}
+                  onCardAction={handleCardAction}
+                  onPrimaryAction={setPendingRedirect}
                 />
               </div>
               <ChatWidget
@@ -861,7 +1013,6 @@ function App() {
 
       <div className={`view ${currentDevice === "m" ? "on" : ""}`}>
         <div className="phone-wrap">
-          <div className="phone-lbl">375px · Mobile</div>
           <div className="phone">
             <div className="phone-notch" />
             <div className="phone-body">
@@ -874,7 +1025,7 @@ function App() {
                   setEmail={setEmail}
                   saveEmail={saveEmail}
                   onCardAction={handleCardAction}
-                  onPrimaryAction={setMockDestination}
+                  onPrimaryAction={setPendingRedirect}
                 />
               </div>
               <ChatWidget
@@ -897,6 +1048,22 @@ function App() {
               <div className="phone-hb" />
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DeviceIntroScreen({ deviceMode }) {
+  return (
+    <div className="device-intro-screen">
+      <div className="device-intro-shell">
+        <div className="device-intro-clock" aria-hidden="true">
+          <div className="device-intro-clock-core" />
+        </div>
+        <div className="device-intro-kicker">Detectando dispositivo...</div>
+        <div className="device-intro-title">
+          Detectado: {deviceMode === "m" ? "Mobile" : "Desktop"}
         </div>
       </div>
     </div>
@@ -1050,8 +1217,9 @@ function RedirectConfirmScreen({ destination, onConfirm, onCancel }) {
 
 function PageContent({ jornada, countdown, isMobile, email, setEmail, saveEmail, onCardAction, onPrimaryAction }) {
   const cards = isMobile ? jornada.mobileNextCards : jornada.nextCards;
-  const explainSectionId = `why-${jornada.pnSub.toLowerCase()}`;
-  const nextSectionId = `next-${jornada.pnSub.toLowerCase()}`;
+  const viewKey = isMobile ? "mobile" : "desktop";
+  const explainSectionId = `why-${jornada.pnSub.toLowerCase()}-${viewKey}`;
+  const nextSectionId = `next-${jornada.pnSub.toLowerCase()}-${viewKey}`;
 
   function scrollToId(id) {
     const element = document.getElementById(id);
@@ -1080,13 +1248,22 @@ function PageContent({ jornada, countdown, isMobile, email, setEmail, saveEmail,
             </div>
             <CountdownUnit value={countdown.secs} label="seg" />
           </div>
-          <button className="cd-btn" style={{ background: jornada.color, color: "#0A0A0A" }}>
+          <button
+            className="cd-btn"
+            style={{ background: jornada.color, color: "#0A0A0A" }}
+            onClick={() =>
+              jornada.heroTarget ? onPrimaryAction(jornada.heroTarget) : scrollToId(nextSectionId)
+            }
+          >
             Participar agora →
           </button>
         </div>
       ) : null}
 
       <div className="hero">
+        <div className="hero-mascot-wrap">
+          <Mascot className="hero-mascot" color={jornada.color} />
+        </div>
         <div className="hero-ey">
           <div className="hero-ey-line" style={{ background: jornada.color }} />
           <div className="hero-ey-txt">{jornada.heroEy}</div>
@@ -1098,7 +1275,21 @@ function PageContent({ jornada, countdown, isMobile, email, setEmail, saveEmail,
             </span>
           ))}
           <span className="ac" style={{ color: jornada.color }}>
-            {jornada.heroH1ac}
+            {isMobile && jornada.label === "Expedição" ? (
+              <>
+                Na prática.
+                <br />
+                Com especialistas.
+              </>
+            ) : isMobile && jornada.label === "Aprender" ? (
+              <>
+                Do zero.
+                <br />
+                No seu ritmo.
+              </>
+            ) : (
+              jornada.heroH1ac
+            )}
           </span>
         </h1>
         <div className="hero-bot">
@@ -1121,6 +1312,14 @@ function PageContent({ jornada, countdown, isMobile, email, setEmail, saveEmail,
               <ChatIcon />
               {jornada.heroCtaTxt}
             </button>
+            {jornada.label === "Game Jam" ? (
+              <div className="hero-mini-countdown">
+                <span className="hero-mini-kicker">Encerra em</span>
+                <span className="hero-mini-value">
+                  {countdown.days}d : {countdown.hours}h : {countdown.mins}m : {countdown.secs}s
+                </span>
+              </div>
+            ) : null}
             <button className="btn-sec" onClick={() => scrollToId(explainSectionId)}>
               Como funciona ↓
             </button>
@@ -1186,6 +1385,10 @@ function PageContent({ jornada, countdown, isMobile, email, setEmail, saveEmail,
                 style={card.primary ? { background: "#0A0A0A", color: "#fff" } : undefined}
                 onClick={(event) => {
                   event.stopPropagation();
+                  if (card.hasEmail && isMobile) {
+                    saveEmail();
+                    return;
+                  }
                   onCardAction(card.action, isMobile);
                 }}
               >
@@ -1199,7 +1402,10 @@ function PageContent({ jornada, countdown, isMobile, email, setEmail, saveEmail,
                     onCardAction(card.helpAction || "chat", isMobile);
                   }}
                 >
-                  {card.helpBtn}
+                  <span className="ns-help-inner">
+                    <span>{card.helpBtn}</span>
+                    <HelpLinkIcon />
+                  </span>
                 </button>
               ) : null}
             </div>
@@ -1220,7 +1426,16 @@ function PageContent({ jornada, countdown, isMobile, email, setEmail, saveEmail,
           <button
             className="bc-btn"
             style={{ background: jornada.color, color: "#0A0A0A" }}
-            onClick={() => jornada.bctaTarget && onPrimaryAction(jornada.bctaTarget)}
+            onClick={() => {
+              if (jornada.label === "Aprender") {
+                scrollToId(nextSectionId);
+                return;
+              }
+
+              if (jornada.bctaTarget) {
+                onPrimaryAction(jornada.bctaTarget);
+              }
+            }}
           >
             <ChatIcon />
             {jornada.bctaBtn}
@@ -1246,11 +1461,13 @@ function ChatWidget({
   closeExplanation,
   mobile = false,
 }) {
+  const accentTextColor = jornada.label === "Aprender" ? "#FFFFFF" : "#0A0A0A";
+
   return (
     <div className={mobile ? "mobile-chat-wrap" : "fab-wrap"} id={`fab${id}`}>
       <div className={`chat-widget ${state.open ? "open" : ""}`} id={`cw${id}`}>
         <div className="cw-head">
-          <div className="cw-av" style={{ background: jornada.color, color: "#0A0A0A" }}>
+          <div className="cw-av" style={{ background: jornada.color, color: accentTextColor }}>
             EX
           </div>
           <div>
@@ -1298,7 +1515,7 @@ function ChatWidget({
                         className="cw-rbtn"
                         style={{
                           background: choiceIndex === 0 ? jornada.color : "#F0F0F0",
-                          color: "#0A0A0A",
+                          color: choiceIndex === 0 ? accentTextColor : "#0A0A0A",
                         }}
                         onClick={() => handleChoice(id, choice.target, choice.explain)}
                       >
@@ -1306,6 +1523,14 @@ function ChatWidget({
                       </button>
                     ))}
                   </div>
+                </div>
+              );
+            }
+
+            if (msg.type === "highlight") {
+              return (
+                <div key={`${msg.text}-${index}`} className="cw-highlight">
+                  {msg.text}
                 </div>
               );
             }
@@ -1329,7 +1554,7 @@ function ChatWidget({
                   className="cw-rbtn"
                   style={{
                     background: index === 0 ? jornada.color : "#F0F0F0",
-                    color: "#0A0A0A",
+                    color: index === 0 ? accentTextColor : "#0A0A0A",
                   }}
                   onClick={() => handleChoice(id, choice.target, choice.explain)}
                 >
@@ -1350,7 +1575,7 @@ function ChatWidget({
                   <div className="cw-ex-item" key={item}>
                     <div
                       className="cw-ex-num"
-                      style={{ background: jornada.color, color: "#0A0A0A" }}
+                      style={{ background: jornada.color, color: accentTextColor }}
                     >
                       {index + 1}
                     </div>
@@ -1360,7 +1585,7 @@ function ChatWidget({
               </div>
               <button
                 className="cw-go-btn"
-                style={{ background: jornada.color, color: "#0A0A0A" }}
+                style={{ background: jornada.color, color: accentTextColor }}
                 onClick={() => handleChoice(id, state.explanation.target, false)}
               >
                 {state.explanation.btn}
@@ -1380,7 +1605,7 @@ function ChatWidget({
                 <div className="cw-ex-item">
                   <div
                     className="cw-ex-num"
-                    style={{ background: jornada.color, color: "#0A0A0A" }}
+                    style={{ background: jornada.color, color: accentTextColor }}
                   >
                     1
                   </div>
@@ -1405,12 +1630,14 @@ function ChatWidget({
         </div>
       </div>
       <button
-        className="fab-btn"
+        className="fab-btn fab-btn-combo"
         id={`fabBtn${id}`}
-        style={{ background: jornada.color }}
+        style={{ background: jornada.color, color: accentTextColor, "--fab-glow": jornada.color }}
         onClick={() => toggleChat(id)}
       >
-        <ChatIcon />
+        <div className="fab-main-icon">
+          <ChatIcon />
+        </div>
         {!state.open ? <div className="fab-badge" id={`badge${id}`}>1</div> : null}
       </button>
     </div>
@@ -1419,21 +1646,22 @@ function ChatWidget({
 
 function Bubble({ type, jornada, text, html = false }) {
   const isUser = type === "user";
+  const accentTextColor = jornada.label === "Aprender" ? "#FFFFFF" : "#0A0A0A";
   return (
     <div className={`cmsg ${isUser ? "u" : "ai"}`}>
       <div
         className="cmav"
         style={
           isUser
-            ? { background: jornada.color, color: "#0A0A0A" }
-            : { background: jornada.color, color: "#0A0A0A" }
+            ? { background: jornada.color, color: accentTextColor }
+            : { background: jornada.color, color: accentTextColor }
         }
       >
         {isUser ? "VC" : "EX"}
       </div>
       <div
         className="cmbub"
-        style={isUser ? { background: jornada.color, color: "#0A0A0A" } : undefined}
+        style={isUser ? { background: jornada.color, color: accentTextColor } : undefined}
         {...(html ? { dangerouslySetInnerHTML: { __html: text } } : {})}
       >
         {!html ? text : null}
@@ -1447,6 +1675,14 @@ function CountdownUnit({ value, label }) {
     <div className="cd-unit">
       <span className="cd-num">{value}</span>
       <div className="cd-lbl">{label}</div>
+    </div>
+  );
+}
+
+function Mascot({ className = "", color }) {
+  return (
+    <div className={className}>
+      <AnimatedLogo color={color} />
     </div>
   );
 }
@@ -1612,10 +1848,10 @@ function contextualChoiceMessage(currentJ, target) {
   if (target === "treinar") {
     return {
       type: "options",
-      text: "Se você quer treinar antes, eu te levo para o caminho que faz mais sentido para o dispositivo que você tem agora.",
+      text: "Se você quer treinar antes, eu posso te levar direto para o caminho de PC ou para o caminho mobile, dependendo de onde você quer começar.",
       choices: [
-        { action: "Treinar no PC com Studio", target: "duvida-studio" },
-        { action: "Começar no celular", target: "duvida-app" },
+        { action: "Treinar no PC com Studio", target: "redirect-studio" },
+        { action: "Começar no celular", target: "redirect-app" },
       ],
     };
   }
@@ -1720,7 +1956,7 @@ function resultMessage(currentJ, answered, cidade) {
       { action: "Treinar antes de entrar", target: "treinar" },
     ];
     if (temEvento) {
-      choices.push({ action: "Ver o evento presencial", target: "evento" });
+      choices.push({ action: "Ver o evento presencial", target: "goto-expo" });
     }
     return { type: "result", text, choices };
   }
@@ -1778,10 +2014,34 @@ function resultMessage(currentJ, answered, cidade) {
   };
 }
 
-function startAnamnese(state, journeyKey) {
+function startAnamnese(state, journeyKey, showIntro = true) {
+  return startGeneralFlow(state, journeyKey, showIntro);
+}
+
+function startGeneralFlow(state, journeyKey, showIntro = true) {
   return {
     ...state,
-    msgs: [questionMessage(JORNADAS[journeyKey].questions[0], 0)],
+    flow: "general",
+    introSeen: state.introSeen || !showIntro,
+    msgs: [showIntro ? generalIntroMessage(journeyKey) : questionMessage(JORNADAS[journeyKey].questions[0], 0)],
+  };
+}
+
+function generalIntroMessage(journeyKey) {
+  const browseLabel = {
+    jam: "Vou navegar para entender a Jam",
+    expo: "Vou navegar para entender a Expedição",
+    aprender: "Vou navegar para entender como criar",
+  };
+
+  return {
+    type: "options",
+    target: "general-intro",
+    text: "Posso te guiar por aqui, ou você pode fechar esta janela e explorar sozinho. Se quiser voltar depois, estarei por aqui.",
+    choices: [
+      { action: "Quero continuar por aqui", target: "continue-general" },
+      { action: browseLabel[journeyKey], target: "browse-journey" },
+    ],
   };
 }
 
@@ -1885,6 +2145,15 @@ function PhoneIcon() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <rect x="5" y="2" width="14" height="20" />
       <path d="M12 18h.01" />
+    </svg>
+  );
+}
+
+function HelpLinkIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M8 12h8" />
+      <path d="M13 7l5 5-5 5" />
     </svg>
   );
 }
