@@ -268,7 +268,7 @@ button,input{font:inherit;}
 .cw-name{font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:600;color:#fff;}
 .cw-st{font-size:10px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:4px;}
 .cw-dot{width:5px;height:5px;background:#22C55E;}
-.cw-close{margin-left:auto;background:transparent;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:17px;line-height:1;}
+.cw-close{margin-left:auto;background:transparent;border:none;color:#fff;cursor:pointer;font-size:22px;line-height:1;}
 .cw-close:hover{color:#fff;}
 .cw-msgs{padding:12px;min-height:360px;max-height:620px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;scroll-padding-top:72px;}
 .cw-msgs::-webkit-scrollbar{width:3px;}

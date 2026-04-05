@@ -20,10 +20,10 @@ const JORNADAS = {
     pnCtaTxt: "Entrar na Jam →",
     showCountdown: false,
     heroEy: "Expedição Roblox · Game Jam",
-    heroH1: ["Crie experiências", "incríveis."],
-    heroH1ac: "Demonstre seu talento.",
+    heroH1: ["Destrave seu talento,", "crie experiências incríveis"],
+    heroH1ac: "e concorra a prêmios.",
     heroDesc:
-      "A Game Jam é o momento de transformar sua ideia em game. <strong>Você pode começar do zero e criar com recursos visuais.</strong>",
+      "A Game Jam é o momento de transformar sua ideia em game. <strong>Você pode começar do zero e tirar sua ideia do papel.</strong>",
     heroCtaTxt: "Entre na comunidade para participar",
     heroTarget: "community",
     whyTitle: "Participar é simples",
