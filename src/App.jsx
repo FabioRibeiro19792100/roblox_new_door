@@ -2101,7 +2101,7 @@ function generalIntroMessage(journeyKey) {
   return {
     type: "options",
     target: "general-intro",
-    text: "Posso te guiar por aqui, ou você pode fechar esta janela e explorar sozinho. Se quiser voltar depois, estarei por aqui.",
+    text: "Que bom te ver por aqui. Se quiser, eu posso te ajudar a encontrar o melhor próximo passo. E, se preferir, você também pode fechar esta janela e explorar no seu ritmo.",
     choices: [
       { action: "Quero continuar por aqui", target: "continue-general" },
       { action: browseLabel[journeyKey], target: "browse-journey" },
