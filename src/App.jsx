@@ -17,50 +17,54 @@ const JORNADAS = {
     navTag: "🏆 Game Jam",
     pnSub: "Game Jam",
     pnDate: "Encerra 24 / 04",
-    pnCtaTxt: "Entrar na Jam →",
+    pnCtaTxt: "Entrar na comunidade da Game Jam →",
     showCountdown: false,
     heroEy: "Expedição Roblox · Game Jam",
     heroH1: ["Destrave seu talento,", "crie experiências incríveis"],
     heroH1ac: "e concorra a prêmios.",
     heroDesc:
-      "A Game Jam é o momento de transformar sua ideia em game. <strong>Você pode começar do zero e tirar sua ideia do papel.</strong>",
-    heroCtaTxt: "Entre na comunidade para participar",
+      "A Game Jam é o momento de transformar sua ideia em game. <strong>Você testa, aprende e cria em equipe.</strong>",
+    heroCtaTxt: "Entrar na comunidade da Game Jam",
     heroTarget: "community",
-    whyTitle: "Participar é simples",
+    whyTitle: "Participar é simples!",
     why: [
       {
-        title: "Criação visual desde o começo",
-        sub: "Roblox Studio é visual. Arrasta, encaixa, testa. Como Lego. Sua ideia vira um game real.",
+        title: "Roblox Studio é visual",
+        sub: "Arrasta, encaixa, testa e sua ideia vira um game.",
+        icon: "spark",
       },
       {
         title: "Começa do zero hoje",
         sub: "Baixa o Studio grátis, entra no Discord e já tem mentores prontos.",
+        icon: "device",
       },
       {
         title: "Você cria com companhia",
-        sub: "Outros criadores no mesmo momento. Dúvida? Alguém responde.",
+        sub: "Várias pessoas criando ao mesmo tempo. Pintou dúvida? Alguém terá resposta.",
+        icon: "people",
       },
       {
         title: "10.000 Robux de prêmio",
         sub: "Real. Mas o mais valioso é seu game publicado no Roblox, feito por você.",
+        icon: "trophy",
       },
     ],
-    nextTitle: "Próximo passo",
+    nextTitle: "Dê o próximo passo",
     nextCards: [
       {
         primary: true,
         title: "Baixar Roblox Studio",
-        sub: "Grátis. PC ou Mac. Em minutos criando.",
-        btn: "⬇ Baixar agora",
+        sub: "De graça, para começar a criar no seu PC ou Mac.",
+        btn: "⬇ Baixar Roblox Studio + plugin",
         action: "studio",
         helpBtn: "Saiba mais",
         helpAction: "studio-help",
       },
       {
         primary: false,
-        title: "Prefere continuar no celular?",
-        sub: "Eu te mando o link do app de criação mobile para abrir no seu celular e continuar por lá.",
-        btn: "Enviar link para o celular",
+        title: "Receba o link do app de criação",
+        sub: "para abrir no seu dispositivo.",
+        btn: "Enviar link",
         action: "app",
         helpBtn: "Saiba mais",
         helpAction: "app-help",
@@ -78,7 +82,7 @@ const JORNADAS = {
       },
       {
         primary: false,
-        title: "Receber link do Studio",
+        title: "Receber link do Roblox Studio + plugin",
         sub: "Te mandamos o link quando estiver no PC.",
         btn: "Receber por email",
         action: "email",
@@ -87,10 +91,10 @@ const JORNADAS = {
         helpAction: "email-help",
       },
     ],
-    bctaTitle: "Pronto pra criar?",
-    bctaAc: "Entra na Jam.",
-    bctaSub: "",
-    bctaBtn: "Entre na comunidade para participar",
+    bctaTitle: "Tudo no esquema pra criar?",
+    bctaAc: "Então bora pra Jam!",
+    bctaSub: "Comunidade da Game Jam no Discord",
+    bctaBtn: "Entrar na comunidade da Game Jam",
     bctaTarget: "community",
     fabColor: "#F5B731",
     questions: [
@@ -117,34 +121,34 @@ const JORNADAS = {
       },
     ],
     explain: {
-      title: "O que acontece quando você entra no Discord:",
+      title: "O que acontece quando você entra na comunidade da Game Jam no Discord:",
       items: [
-        "Você entra na comunidade da Expedição Roblox",
+        "Você entra na comunidade da Game Jam no Discord",
         "Apresenta sua ideia de game",
         "Recebe orientação para baixar o Studio e começar",
         "Acompanha outros criadores e tira dúvidas",
         "Submete seu game até 24/04 e concorre a 10.000 Robux",
       ],
-      btn: "Entre na comunidade para participar →",
+      btn: "Ver comunidade no Discord →",
       target: "redirect-community",
     },
     explainStudio: {
       title: "O que acontece se você começar pelo Studio:",
       items: [
-        "Você baixa o Roblox Studio no PC ou Mac",
+        "Você baixa o Roblox Studio + plugin de tutoriais no PC ou Mac",
         "Começa a criar com mais recursos e mais controle",
         "Testa sua ideia com mais liberdade desde o começo",
-        "Quando estiver confortável, entra na comunidade da Jam",
-        "Publica seu game e segue para a submissao",
+        "Quando estiver confortável, entra na comunidade da Game Jam",
+        "Publica seu game e segue para a submissão",
       ],
-      btn: "Baixar Studio agora →",
+      btn: "Baixar Roblox Studio + plugin →",
       target: "redirect-studio",
     },
     explainApp: {
       title: "O que acontece se você começar pelo app:",
       items: [
-        "Você abre o app de criacao mobile direto no celular",
-        "Testa sua ideia e aprende a logica de criacao sem esperar um PC",
+        "Você abre o app de criação mobile direto no celular",
+        "Testa sua ideia e aprende a lógica de criação sem esperar um PC",
         "Salva o progresso para continuar depois",
         "Quando tiver acesso a um computador, ativa no Studio",
         "Depois segue para a comunidade da Jam para evoluir e submeter",
@@ -162,47 +166,51 @@ const JORNADAS = {
     navTag: "🗺️ Expedição Presencial",
     pnSub: "Expedição",
     pnDate: "SP · RJ · REC · POA · MAN · BSB",
-    pnCtaTxt: "Garantir vaga →",
+    pnCtaTxt: "Acessar formulário →",
     showCountdown: false,
-    heroEy: "Expedição Roblox · Evento Presencial",
+    heroEy: "Expedição Roblox · Na Estrada",
     heroH1: ["Aprenda a criar", "experiências digitais."],
     heroH1ac: "Na prática. Com especialistas.",
     heroDesc:
-      "Um evento presencial nas capitais brasileiras. Você aprende a criar games com Roblox Studio guiado por profissionais de educação, tecnologia e games. <strong>E conecta essa habilidade com o mercado.</strong>",
-    heroCtaTxt: "Garantir minha vaga",
-    whyTitle: "O que acontece no evento",
+      "Aprenda a criar experiências digitais na prática e com especialistas. Expedição Roblox na Estrada é um evento presencial em várias capitais do país para criar no Roblox Studio e conectar essa habilidade com o mercado de trabalho.",
+    heroCtaTxt: "Quero me inscrever",
+    whyTitle: "O que você vive na Expedição:",
     why: [
       {
-        title: "Criação guiada por profissionais",
-        sub: "Educadores, desenvolvedores e profissionais de games te guiam do zero ao game publicado.",
+        title: "Criação mediada por profissionais",
+        sub: "Especialistas em educação, tecnologia e games te guiam do zero à publicação de experiências virtuais.",
+        icon: "guide",
       },
       {
-        title: "Habilidade + mercado",
-        sub: "Mais do que criar: você entende como essa habilidade se conecta com oportunidades reais.",
+        title: "Skills em alta no mercado",
+        sub: "Enquanto você cria, desenvolve habilidades que se conectam com oportunidades de carreira.",
+        icon: "diploma",
       },
       {
         title: "Uso ético e seguro",
-        sub: "Você aprende sobre criação responsável, privacidade e segurança no ambiente digital.",
+        sub: "Você aprende sobre privacidade, segurança e criação responsável no ambiente digital.",
+        icon: "shield",
       },
       {
         title: "Comunidade real",
-        sub: "Você vai com pessoas da sua cidade e sai com uma rede de criadores.",
+        sub: "Você entra sem conhecer as pessoas da cidade e sai com uma rede de contatos.",
+        icon: "network",
       },
     ],
-    nextTitle: "Como participar",
+    nextTitle: "Participe!",
     nextCards: [
       {
         primary: true,
         title: "Quero me inscrever",
-        sub: "Abra a inscrição e escolha a cidade com vaga disponível.",
-        btn: "→ Abrir inscrição",
+        sub: "Abra o formulário de inscrição e escolha a cidade.",
+        btn: "Acessar formulário",
         action: "evento",
       },
       {
         primary: false,
         title: "Ficou com dúvida?",
-        sub: "Abra o chat e fale com o guia para entender inscrição, autorização e vaga.",
-        btn: "Abrir chat",
+        sub: "Abra o chat para entender melhor o processo de inscrição.",
+        btn: "Tirar dúvida no chat",
         action: "chat",
       },
     ],
@@ -210,22 +218,22 @@ const JORNADAS = {
       {
         primary: true,
         title: "Quero me inscrever",
-        sub: "Abra a inscrição e veja a cidade com vaga disponível.",
-        btn: "→ Abrir inscrição",
+        sub: "Abra o formulário de inscrição e escolha a cidade com vaga disponível.",
+        btn: "Acessar formulário",
         action: "evento",
       },
       {
         primary: false,
         title: "Ficou com dúvida?",
-        sub: "Abra o chat e fale com o guia para entender inscrição e vaga.",
-        btn: "Abrir chat",
+        sub: "Abra o chat para entender melhor o processo de inscrição.",
+        btn: "Tirar dúvida no chat",
         action: "chat",
       },
     ],
-    bctaTitle: "Pronto pra se inscrever?",
-    bctaAc: "Vagas limitadas.",
-    bctaSub: "Evento presencial nas capitais brasileiras",
-    bctaBtn: "Garantir minha vaga",
+    bctaTitle: "Tudo no esquema pra se inscrever?",
+    bctaAc: "Então bora que as vagas são limitadas!",
+    bctaSub: "",
+    bctaBtn: "Quero me inscrever",
     bctaTarget: "evento",
     fabColor: "#5BB8E8",
     questions: [
@@ -257,7 +265,7 @@ const JORNADAS = {
       },
     ],
     explain: {
-      title: "O que acontece para garantir sua vaga:",
+      title: "O que você vive na Expedição:",
       items: [
         "Escolha sua capital e a data disponível",
         "Preencha o formulário de inscrição",
@@ -265,7 +273,7 @@ const JORNADAS = {
         "Confirme sua vaga por email",
         "Apareça no dia com vontade de criar",
       ],
-      btn: "Garantir minha vaga →",
+      btn: "Acessar formulário →",
       target: "redirect-evento",
     },
   },
@@ -278,31 +286,35 @@ const JORNADAS = {
     navTag: "🎮 Aprender a Criar",
     pnSub: "Aprender",
     pnDate: "Grátis · PC e Mobile",
-    pnCtaTxt: "Começar agora →",
+    pnCtaTxt: "Escolher por onde começar →",
     showCountdown: false,
-    heroEy: "Expedição Roblox · Criação",
+    heroEy: "Expedição Roblox · Aprender a Criar",
     heroH1: ["Crie seu primeiro", "game no Roblox."],
     heroH1ac: "Do zero. No seu ritmo.",
     heroDesc:
-      "Baixe o Roblox Studio, instale nosso plugin com tutoriais e comece a criar. No celular, use nosso emulador mobile. <strong>Você aprende criando em cada etapa.</strong>",
+      "Baixe o Roblox Studio, instale o plugin com tutoriais e comece a criar no celular ou no PC. A cada nova etapa, um novo aprendizado. <strong>Você aprende criando em cada etapa.</strong>",
     heroCtaTxt: "Começar a criar",
-    whyTitle: "Como funciona",
+    whyTitle: "Como funciona:",
     why: [
       {
-        title: "Perfeito para começar",
-        sub: "O Studio é visual e intuitivo. Nosso plugin guia cada passo com tutoriais interativos.",
+        title: "Roblox Studio é visual",
+        sub: "Arrasta, encaixa, testa e sua ideia vira um game.",
+        icon: "spark",
       },
       {
         title: "PC ou celular",
-        sub: "No PC: Roblox Studio + plugin. No celular: emulador mobile que salva e ativa no Studio depois.",
+        sub: "No PC: Roblox Studio + plugin. No celular: emulador mobile que salva e continua no Studio depois.",
+        icon: "device",
       },
       {
         title: "Você aprende criando",
-        sub: "Sem teoria antes de praticar. Cada tutorial termina com algo real publicado no Roblox.",
+        sub: "Cada tutorial termina com algo real publicado no Roblox.",
+        icon: "people",
       },
       {
         title: "No seu ritmo",
-        sub: "Sem prazo, sem pressão. Você avança conforme aprende e quando estiver pronto, pode entrar na Jam.",
+        sub: "Sem prazo, sem pressão. Você avança quando fizer sentido para você e depois pode seguir para a Jam.",
+        icon: "clock",
       },
     ],
     nextTitle: "Por onde começar",
@@ -311,7 +323,7 @@ const JORNADAS = {
         primary: true,
         title: "Quero criar no PC",
         sub: "Baixe o Roblox Studio com o plugin de tutoriais e comece pelo caminho mais completo.",
-        btn: "⬇ Baixar Studio + Plugin",
+        btn: "⬇ Baixar Roblox Studio + plugin",
         action: "studio",
         helpBtn: "Saiba mais",
         helpAction: "studio-help",
@@ -319,7 +331,7 @@ const JORNADAS = {
       {
         primary: false,
         title: "Prefere continuar no celular?",
-        sub: "Eu te mando o link do emulador mobile para abrir no seu celular e continuar por lá.",
+        sub: "Receba o link do app de criação para abrir no seu dispositivo.",
         btn: "Enviar link para o celular",
         action: "app",
         helpBtn: "Saiba mais",
@@ -339,8 +351,8 @@ const JORNADAS = {
       {
         primary: false,
         title: "Quero criar no PC",
-        sub: "Baixe o Studio com o plugin de tutoriais para seguir pelo caminho completo.",
-        btn: "⬇ Baixar Studio + Plugin",
+        sub: "Baixe o Roblox Studio com o plugin de tutoriais para seguir pelo caminho completo.",
+        btn: "⬇ Baixar Roblox Studio + plugin",
         action: "studio",
         helpBtn: "Saiba mais",
         helpAction: "studio-help",
@@ -348,7 +360,7 @@ const JORNADAS = {
     ],
     bctaTitle: "Comece a criar hoje.",
     bctaAc: "É grátis.",
-    bctaSub: "Studio + Plugin · Emulador mobile · No seu ritmo",
+    bctaSub: "Studio + plugin · versão mobile · tudo no seu ritmo",
     bctaBtn: "Escolher por onde começar",
     fabColor: "#E63946",
     questions: [
@@ -366,9 +378,9 @@ const JORNADAS = {
       },
     ],
     explain: {
-      title: "O que acontece quando você começa:",
+      title: "O que acontece quando você começa a criar:",
       items: [
-        "Você baixa o Roblox Studio grátis (PC) ou abre o emulador mobile",
+        "Você baixa o Roblox Studio grátis no PC ou Mac, ou abre o emulador mobile",
         "Instala nosso plugin com tutoriais interativos dentro do Studio",
         "Cada tutorial termina com algo real publicado no Roblox",
         "Você avança no seu ritmo, sem prazo nem pressão",
@@ -379,13 +391,13 @@ const JORNADAS = {
     explainStudio: {
       title: "O que acontece no Studio:",
       items: [
-        "Você baixa o Roblox Studio no PC ou Mac",
+        "Você baixa o Roblox Studio + plugin de tutoriais no PC ou Mac",
         "Instala o plugin com tutoriais interativos",
         "Começa a criar com o caminho mais completo",
         "Publica algo real enquanto aprende",
         "Quando quiser, pode entrar na Game Jam",
       ],
-      btn: "Baixar Studio + Plugin →",
+      btn: "Baixar Roblox Studio + plugin →",
       target: "redirect-studio",
     },
     explainApp: {
@@ -688,7 +700,7 @@ function App() {
                 ...state.msgs,
                 {
                   type: "ai",
-                  text: "Como você está no celular, eu posso te mandar o link do Studio + Plugin por email para você abrir depois no PC ou Mac.",
+                  text: "Como você está no celular, eu posso te mandar o link do Roblox Studio + plugin por email para você abrir depois no PC ou Mac.",
                 },
               ],
             },
@@ -739,11 +751,11 @@ function App() {
         "fechar-duvida-email":
           "Perfeito. Quando quiser, é só preencher o campo e eu te mando o link.",
         treinar:
-          "Para treinar, baixe o Roblox Studio grátis (PC) ou abra o emulador mobile. Nosso plugin tem tutoriais interativos. Quando estiver pronto, a Jam te espera.",
+          "Para treinar, baixe o Roblox Studio grátis no PC ou Mac, ou abra o emulador mobile. Nosso plugin de tutoriais te acompanha em cada passo. Quando estiver pronto, a Jam te espera.",
         espera:
           "Vamos te colocar na lista de espera e avisar quando tiver vagas na sua região. <span style=\"opacity:.4;font-size:11px\">(link real aqui)</span>",
         jam:
-          "Mandando você para a Game Jam! Entra no Discord e começa a criar. <span style=\"opacity:.4;font-size:11px\">(link real aqui)</span>",
+          "Mandando você para a comunidade da Game Jam no Discord! Comece a criar por lá. <span style=\"opacity:.4;font-size:11px\">(link real aqui)</span>",
       };
 
       return {
@@ -789,7 +801,7 @@ function App() {
     const message =
       target === "app"
         ? `Anotado! O link do app chega em <strong>${email.trim()}</strong> para você abrir no celular.`
-        : `Anotado! O link do Studio chega em <strong>${email.trim()}</strong> quando você estiver no PC.`;
+        : `Anotado! O link do Roblox Studio + plugin chega em <strong>${email.trim()}</strong> quando você estiver no PC.`;
     setChatState((prev) => ({
       ...prev,
       [chatId]: {
@@ -817,13 +829,13 @@ function App() {
           flow: action,
           collectEmailFor: "studio",
           msgs: [
-            {
-              type: "ai",
-              text: "Como você está no celular, eu posso te mandar o link do Studio + Plugin por email para você abrir depois no PC ou Mac.",
+                {
+                  type: "ai",
+                  text: "Como você está no celular, eu posso te mandar o link do Roblox Studio + plugin por email para você abrir depois no PC ou Mac.",
+                },
+              ],
             },
-          ],
-        },
-      }));
+          }));
       return;
     }
 
@@ -866,7 +878,7 @@ function App() {
           msgs: [
             {
               type: "options",
-              text: "Se você está no celular agora, este card guarda o link do Studio para você abrir depois no PC ou Mac. Você pode preencher o email no próprio campo do card ou tirar uma dúvida rápida aqui.",
+              text: "Se você está no celular agora, este card guarda o link do Roblox Studio + plugin para você abrir depois no PC ou Mac. Você pode preencher o email no próprio campo do card ou tirar uma dúvida rápida aqui.",
               choices: [
                 { action: "Entendi, vou deixar meu email", target: "fechar-duvida-email" },
                 { action: "Ver caminho mobile", target: "duvida-app" },
@@ -1090,8 +1102,8 @@ function JourneyEntry({ onSelect, autoDevice }) {
         <div className="entry-kicker">Modo de teste</div>
         <h1 className="entry-title">Escolha a jornada para simular.</h1>
         <p className="entry-sub">
-          Esta tela nao existe no fluxo real. Ela serve apenas para abrir manualmente a jornada
-          que viria do anuncio clicado.
+          Esta tela não existe no fluxo real. Ela serve apenas para abrir manualmente a jornada
+          que viria do anúncio clicado.
         </p>
         <div className="entry-device">
           <span className="entry-device-label">Visualizar como</span>
@@ -1113,18 +1125,18 @@ function JourneyEntry({ onSelect, autoDevice }) {
         <div className="entry-grid">
           <button className="entry-card jam" onClick={() => onSelect("jam", selectedDevice)}>
             <span className="entry-card-ey">Game Jam</span>
-            <strong>Simular anuncio da Game Jam</strong>
-            <span>Abrir a jornada de competicao.</span>
+            <strong>Simular anúncio da Game Jam</strong>
+            <span>Abrir a jornada de competição.</span>
           </button>
           <button className="entry-card expo" onClick={() => onSelect("expo", selectedDevice)}>
             <span className="entry-card-ey">Expedição</span>
-            <strong>Simular anuncio do evento</strong>
-            <span>Abrir a jornada do presencial.</span>
+            <strong>Simular anúncio do evento</strong>
+            <span>Abrir a jornada presencial.</span>
           </button>
           <button className="entry-card aprender" onClick={() => onSelect("aprender", selectedDevice)}>
             <span className="entry-card-ey">Aprender</span>
-            <strong>Simular anuncio de aprendizagem</strong>
-            <span>Abrir a jornada para comecar a criar.</span>
+            <strong>Simular anúncio de aprendizagem</strong>
+            <span>Abrir a jornada para começar a criar.</span>
           </button>
         </div>
       </div>
@@ -1136,32 +1148,32 @@ function MockDestinationScreen({ destination, onBack }) {
   const screens = {
     community: {
       label: "Comunidade",
-      title: "Voce foi para a comunidade no Discord.",
-      body: "Esta e uma tela simulada do mock para representar a saida da jornada para a comunidade.",
+      title: "Você foi para a comunidade da Game Jam no Discord.",
+      body: "Esta é uma tela simulada do mock para representar a saída da jornada para a comunidade da Game Jam.",
       button: "Voltar para a jornada",
     },
     studio: {
       label: "Studio",
-      title: "Voce foi para o Roblox Studio + Plugin.",
-      body: "Esta e uma tela simulada do mock para representar a saida da jornada para o download e inicio no Studio.",
+      title: "Você foi para o Roblox Studio + plugin.",
+      body: "Esta é uma tela simulada do mock para representar a saída da jornada para o download e início no Studio.",
       button: "Voltar para a jornada",
     },
     app: {
       label: "Mobile",
-      title: "Voce foi para o emulador mobile.",
-      body: "Esta e uma tela simulada do mock para representar a saida da jornada para o caminho mobile.",
+      title: "Você foi para o emulador mobile.",
+      body: "Esta é uma tela simulada do mock para representar a saída da jornada para o caminho mobile.",
       button: "Voltar para a jornada",
     },
     evento: {
-      label: "Inscricao",
-      title: "Voce foi para a inscricao do evento.",
-      body: "Esta e uma tela simulada do mock para representar a saida da jornada para a inscricao do evento presencial.",
+      label: "Inscrição",
+      title: "Você foi para a inscrição do evento.",
+      body: "Esta é uma tela simulada do mock para representar a saída da jornada para a inscrição do evento presencial.",
       button: "Voltar para a jornada",
     },
     site: {
       label: "Site completo",
-      title: "Voce foi para o site completo da Expedicao.",
-      body: "Esta e uma tela simulada do mock para representar a saida da jornada guiada para o site completo.",
+      title: "Você foi para o site completo da Expedição.",
+      body: "Esta é uma tela simulada do mock para representar a saída da jornada guiada para o site completo.",
       button: "Voltar para a jornada",
     },
   };
@@ -1186,32 +1198,32 @@ function RedirectConfirmScreen({ destination, onConfirm, onCancel }) {
   const copy = {
     community: {
       label: "Comunidade",
-      title: "Posso te redirecionar para a comunidade agora?",
-      body: "Voce vai sair desta jornada guiada e entrar na tela simulada da comunidade no Discord.",
+      title: "Você quer sair desta jornada guiada e entrar na tela simulada da comunidade da Game Jam no Discord?",
+      body: "Você vai sair desta jornada guiada e entrar na tela simulada da comunidade da Game Jam no Discord.",
       confirm: "Ir para a comunidade",
     },
     studio: {
       label: "Studio",
-      title: "Posso te redirecionar para o Studio agora?",
-      body: "Voce vai sair desta jornada guiada e entrar na tela simulada do Roblox Studio + Plugin.",
+      title: "Você quer sair desta jornada guiada e entrar na tela simulada do Roblox Studio + plugin?",
+      body: "Você vai sair desta jornada guiada e entrar na tela simulada do Roblox Studio + plugin.",
       confirm: "Ir para o Studio",
     },
     app: {
       label: "Mobile",
-      title: "Posso te redirecionar para o emulador mobile agora?",
-      body: "Voce vai sair desta jornada guiada e entrar na tela simulada do caminho mobile.",
+      title: "Você quer sair desta jornada guiada e entrar na tela simulada do emulador mobile?",
+      body: "Você vai sair desta jornada guiada e entrar na tela simulada do caminho mobile.",
       confirm: "Ir para o mobile",
     },
     evento: {
-      label: "Inscricao",
-      title: "Posso te redirecionar para a inscricao agora?",
-      body: "Voce vai sair desta jornada guiada e entrar na tela simulada da inscricao do evento presencial.",
-      confirm: "Ir para a inscricao",
+      label: "Inscrição",
+      title: "Você quer sair desta jornada guiada e entrar na tela simulada da inscrição do evento?",
+      body: "Você vai sair desta jornada guiada e entrar na tela simulada da inscrição do evento presencial.",
+      confirm: "Ir para a inscrição",
     },
     site: {
       label: "Site completo",
-      title: "Posso te redirecionar para o site completo agora?",
-      body: "Voce vai sair desta jornada guiada e entrar na tela simulada do site completo da Expedicao.",
+      title: "Você quer sair desta jornada guiada e entrar na tela simulada do site completo da Expedição?",
+      body: "Você vai sair desta jornada guiada e entrar na tela simulada do site completo da Expedição.",
       confirm: "Ir para o site completo",
     },
   };
@@ -1325,7 +1337,7 @@ function PageContent({
               <>
                 Expedição Roblox
                 <br />
-                Evento Presencial
+                Na Estrada
               </>
             ) : (
               jornada.heroEy
@@ -1409,7 +1421,7 @@ function PageContent({
           {jornada.why.map((item, index) => (
             <div className="why-item" key={item.title}>
               <div className="why-ic" style={{ color: jornada.color }}>
-                <FeatureIcon index={index} />
+                <FeatureIcon index={index} kind={item.icon} />
               </div>
               <div className="why-title">{item.title}</div>
               <div className="why-sub">{item.sub}</div>
@@ -1504,7 +1516,7 @@ function PageContent({
             <ChatIcon />
             {jornada.bctaBtn}
           </button>
-          <div className="bc-note">Grátis · sem experiência prévia</div>
+          {jornada.label === "Game Jam" ? <div className="bc-note">Grátis para criar</div> : null}
         </div>
       </div>
     </div>
@@ -1663,7 +1675,7 @@ function ChatWidget({
           {state.collectEmailFor ? (
             <div className="cw-explain">
               <div className="cw-ex-title">
-                {state.collectEmailFor === "app" ? "Receber link do app" : "Receber link do Studio"}
+                {state.collectEmailFor === "app" ? "Receber link do app" : "Receber link do Roblox Studio + plugin"}
               </div>
               <div className="cw-ex-list">
                 <div className="cw-ex-item">
@@ -1676,7 +1688,7 @@ function ChatWidget({
                   <span>
                     {state.collectEmailFor === "app"
                       ? "Deixe seu email para abrir o app de criação mobile depois no seu celular."
-                      : "Deixe seu email para abrir o Studio + Plugin depois no desktop."}
+                      : "Deixe seu email para abrir o Roblox Studio + plugin depois no desktop."}
                   </span>
                 </div>
               </div>
@@ -1765,10 +1777,10 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "jam" && action === "studio") {
     return {
       type: "options",
-      text: "Se você quer entrar na Jam pelo caminho mais completo, o Studio no PC ou Mac é a melhor porta de entrada. Quer que eu te mostre rapidamente como isso funciona ou prefere ir direto?",
+      text: "Se você quer entrar na Jam pelo caminho mais completo, o Roblox Studio + plugin no PC ou Mac é a melhor porta de entrada. Quer que eu te mostre rapidamente como isso funciona ou prefere ir direto?",
       choices: [
         { action: "Ver como funciona", target: "explain-studio" },
-        { action: "Baixar Studio agora", target: "redirect-studio" },
+        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
         { action: "Ainda tenho dúvida", target: "duvida-studio" },
       ],
     };
@@ -1777,10 +1789,10 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "jam" && action === "studio-help") {
     return {
       type: "options",
-      text: "O Studio é o caminho ideal se você quer criar para a Jam com mais controle no PC ou Mac. O plugin te guia e depois você pode entrar na comunidade para publicar sua ideia. O que você quer fazer agora?",
+      text: "O Roblox Studio + plugin é o caminho ideal se você quer criar para a Jam com mais controle no PC ou Mac. O plugin de tutoriais te guia e depois você pode entrar na comunidade da Game Jam para publicar sua ideia. O que você quer fazer agora?",
       choices: [
         { action: "Ver como funciona", target: "explain-studio" },
-        { action: "Baixar Studio agora", target: "redirect-studio" },
+        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
         { action: "Ver caminho mobile", target: "duvida-app" },
       ],
     };
@@ -1801,7 +1813,7 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "jam" && action === "app-help") {
     return {
       type: "options",
-      text: "No mobile você começa mais leve: testa ideia, aprende a lógica e depois continua no Studio se quiser levar isso para a Jam. Quer ver o fluxo ou abrir direto?",
+      text: "No mobile você começa mais leve: testa ideia, aprende a lógica e depois continua no Studio para levar isso para a Jam. Quer ver o fluxo ou abrir direto?",
       choices: [
         { action: "Ver como funciona", target: "explain-app" },
         { action: "Abrir app agora", target: "redirect-app" },
@@ -1813,9 +1825,9 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "jam" && action === "email-help") {
     return {
       type: "options",
-      text: "Esse caminho existe para quando você está no celular agora, mas quer continuar depois no Studio no PC ou Mac. Se quiser, você deixa seu email aqui e recebe o link para abrir quando estiver no desktop.",
+      text: "Esse caminho existe para quando você está no celular agora, mas quer continuar depois no Roblox Studio + plugin no PC ou Mac. Se quiser, você deixa seu email aqui e recebe o link para abrir quando estiver no desktop.",
       choices: [
-        { action: "Receber link do Studio", target: "duvida-email-studio" },
+        { action: "Receber link do Roblox Studio + plugin", target: "duvida-email-studio" },
         { action: "Ver caminho mobile", target: "duvida-app" },
       ],
     };
@@ -1827,7 +1839,7 @@ function cardFocusMessage(currentJ, action) {
       text: "Se você quer ir para o evento presencial, eu posso te mostrar o passo a passo da vaga ou te levar direto para a inscrição simulada.",
       choices: [
         { action: "Ver como funciona", target: "explain-evento" },
-        { action: "Garantir minha vaga", target: "explain-evento" },
+        { action: "Acessar formulário", target: "explain-evento" },
         { action: "Tirar dúvida sobre inscrição", target: "duvida-evento" },
       ],
     };
@@ -1840,7 +1852,7 @@ function cardFocusMessage(currentJ, action) {
       choices: [
         { action: "Entender a inscrição", target: "duvida-evento" },
         { action: "Ver o passo a passo", target: "explain-evento" },
-        { action: "Garantir minha vaga", target: "explain-evento" },
+        { action: "Acessar formulário", target: "explain-evento" },
       ],
     };
   }
@@ -1851,7 +1863,7 @@ function cardFocusMessage(currentJ, action) {
       text: "Perfeito. Como você escolheu começar pelo PC, o próximo passo é o Studio com o plugin de tutoriais. Quer ver o passo a passo ou prefere seguir direto?",
       choices: [
         { action: "Ver como funciona", target: "explain-studio" },
-        { action: "Baixar Studio + Plugin", target: "redirect-studio" },
+        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
         { action: "Comparar com o celular", target: "duvida-app" },
       ],
     };
@@ -1863,7 +1875,7 @@ function cardFocusMessage(currentJ, action) {
       text: "Como você já abriu o caminho do PC, eu vou te mostrar só o que importa: no Studio você cria com mais recursos, usa o plugin com tutoriais e consegue seguir pelo fluxo mais completo. O que você quer fazer agora?",
       choices: [
         { action: "Ver como funciona", target: "explain-studio" },
-        { action: "Baixar Studio + Plugin", target: "redirect-studio" },
+        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
         { action: "Comparar com o celular", target: "duvida-app" },
       ],
     };
@@ -1923,7 +1935,7 @@ function contextualChoiceMessage(currentJ, target) {
   if (currentJ === "jam" && target === "duvida-email-studio") {
     return {
       type: "options",
-      text: "Perfeito. Você pode deixar seu email no campo desse card e eu te envio o link do Studio para abrir depois no PC ou Mac.",
+      text: "Perfeito. Você pode deixar seu email no campo desse card e eu te envio o link do Roblox Studio + plugin para abrir depois no PC ou Mac.",
       choices: [
         { action: "Entendi", target: "fechar-duvida-email" },
         { action: "Ver caminho mobile", target: "duvida-app" },
@@ -1937,7 +1949,7 @@ function contextualChoiceMessage(currentJ, target) {
       text: "Se a sua dúvida é sobre o caminho do PC, a resposta curta é: vale a pena quando você já tem acesso a PC ou Mac e quer criar com mais recursos desde o começo. Quer ver o passo a passo ou seguir direto?",
       choices: [
         { action: "Ver como funciona", target: "explain-studio" },
-        { action: "Baixar Studio + Plugin", target: "redirect-studio" },
+        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
         { action: "Comparar com o celular", target: "duvida-app" },
       ],
     };
@@ -1972,7 +1984,7 @@ function contextualChoiceMessage(currentJ, target) {
       text: "No evento presencial, o fluxo é simples: inscrição, autorização do responsável e confirmação da vaga por email. Quer ver esse passo a passo ou ir para a vaga?",
       choices: [
         { action: "Ver passo a passo", target: "explain-evento" },
-        { action: "Garantir minha vaga", target: "explain-evento" },
+        { action: "Acessar formulário", target: "explain-evento" },
       ],
     };
   }
@@ -1980,10 +1992,10 @@ function contextualChoiceMessage(currentJ, target) {
   if (currentJ === "jam" && target === "duvida-studio") {
     return {
       type: "options",
-      text: "Se você vai criar pelo PC ou Mac, o Studio é o melhor caminho para entrar na Jam com mais recursos. Quer ver como ele funciona ou já quer seguir?",
+      text: "Se você vai criar pelo PC ou Mac, o Roblox Studio + plugin é o melhor caminho para entrar na Jam com mais recursos. Quer ver como ele funciona ou já quer seguir?",
       choices: [
         { action: "Ver como funciona", target: "explain-studio" },
-        { action: "Baixar Studio agora", target: "redirect-studio" },
+        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
         { action: "Ver caminho mobile", target: "duvida-app" },
       ],
     };
@@ -2016,7 +2028,7 @@ function resultMessage(currentJ, answered, cidade) {
       text = "Travar faz parte. Na Jam você tem suporte pra desbloquear.";
     }
     const choices = [
-      { action: "Entrar na Jam agora", target: "explain-jam" },
+      { action: "Entrar na comunidade da Game Jam", target: "explain-jam" },
       { action: "Treinar antes de entrar", target: "treinar" },
     ];
     if (temEvento) {
@@ -2053,7 +2065,7 @@ function resultMessage(currentJ, answered, cidade) {
       interesse ? "Boa escolha de foco." : "Vamos garantir sua vaga."
     }`;
     const choices = [
-      { action: "Garantir minha vaga", target: "explain-evento" },
+      { action: "Acessar formulário", target: "explain-evento" },
       { action: "Aprender antes de ir", target: "treinar" },
     ];
     return { type: "result", text, choices };
@@ -2072,7 +2084,7 @@ function resultMessage(currentJ, answered, cidade) {
           { action: "Quero ajuda para escolher", target: "duvida-criar" },
         ]
       : [
-          { action: "Baixar Studio + Plugin", target: "explain-studio" },
+          { action: "Baixar Roblox Studio + plugin", target: "explain-studio" },
           { action: "Quero ajuda para escolher", target: "duvida-criar" },
         ],
   };
@@ -2241,26 +2253,71 @@ function CloseIcon() {
   );
 }
 
-function FeatureIcon({ index }) {
-  const icons = [
-    <svg key="0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <rect x="2" y="3" width="20" height="14" />
-      <path d="M8 21h8M12 17v4" />
-    </svg>,
-    <svg key="1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 6v6l4 2" />
-    </svg>,
-    <svg key="2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>,
-    <svg key="3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-    </svg>,
-  ];
-  return icons[index];
+function FeatureIcon({ index, kind }) {
+  const icons = {
+    spark: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M12 2l2.7 5.8L21 11l-6.3 3.2L12 20l-2.7-5.8L3 11l6.3-3.2L12 2z" />
+      </svg>
+    ),
+    device: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect x="3" y="4" width="18" height="12" rx="2" />
+        <path d="M8 20h8M12 16v4" />
+      </svg>
+    ),
+    people: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+        <circle cx="10" cy="8" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    ),
+    trophy: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M8 4h8v3a4 4 0 0 1-8 0z" />
+        <path d="M8 4H5a2 2 0 0 0-2 2c0 3 2 5 5 5M16 4h3a2 2 0 0 1 2 2c0 3-2 5-5 5" />
+        <path d="M12 12v5" />
+        <path d="M8 21h8" />
+      </svg>
+    ),
+    guide: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M4 20h16" />
+        <path d="M6 16V8l6-4 6 4v8" />
+        <path d="M9 20v-6h6v6" />
+      </svg>
+    ),
+    diploma: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect x="4" y="3" width="16" height="14" rx="2" />
+        <path d="M8 8h8M8 12h5" />
+        <path d="M10 17v4l2-1.5L14 21v-4" />
+      </svg>
+    ),
+    shield: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3z" />
+        <path d="M9.5 12l2 2 3.5-4" />
+      </svg>
+    ),
+    network: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="6" cy="7" r="2.5" />
+        <circle cx="18" cy="7" r="2.5" />
+        <circle cx="12" cy="17" r="2.5" />
+        <path d="M8 8.5l2.6 5M16 8.5l-2.6 5M8.2 7h7.6" />
+      </svg>
+    ),
+    clock: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+    ),
+  };
+
+  return icons[kind] || icons[index] || icons.spark;
 }
 
 export default App;
