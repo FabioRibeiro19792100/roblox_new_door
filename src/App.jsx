@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import AnimatedLogo from "../index.jsx";
 
 const promoVideo = new URL("../Plugin Caxoro laramja-low.mp4", import.meta.url).href;
@@ -6,6 +6,13 @@ const expeditionLogo = new URL("../logo-expedicao-colorido (1).png", import.meta
 
 const JAM_END = new Date("2026-04-24T23:59:59-03:00");
 const CIDADES_EVENTO = ["sp", "rj", "recife", "poa", "manaus", "brasilia"];
+const EXTERNAL_LINKS = {
+  community: "",
+  studio: "",
+  app: "",
+  evento: "",
+  site: "",
+};
 
 const JORNADAS = {
   jam: {
@@ -23,7 +30,7 @@ const JORNADAS = {
     heroH1: ["Destrave seu talento,", "crie experiências incríveis"],
     heroH1ac: "e concorra a prêmios.",
     heroDesc:
-      "A Game Jam é o momento de transformar sua ideia em criação digital. <strong>Você testa, aprende e cria em equipe.</strong>",
+      "A Game Jam é um evento online e mensal para transformar sua ideia em criação digital. <strong>Você testa, aprende e cria em equipe.</strong>",
     heroCtaTxt: "Entrar na comunidade da Game Jam",
     heroTarget: "community",
     whyTitle: "Participar é simples!",
@@ -35,7 +42,7 @@ const JORNADAS = {
       },
       {
         title: "Começa do zero hoje",
-        sub: "Baixa o Studio grátis, entra no Discord e aproveite os conteúdos e experiências que preparamos para você.",
+        sub: "Baixe grátis o Studio, entre no Discord e aproveite os conteúdos e experiências que preparamos para você.",
         icon: "device",
       },
       {
@@ -45,7 +52,7 @@ const JORNADAS = {
       },
       {
         title: "10.000 Robux de prêmio",
-        sub: "Real. Mas o mais valioso é seu game publicado no Roblox, feito por você.",
+        sub: "É real! Mas o mais valioso é ter publicado no Roblox um game que saiu de dentro da sua cabeça.",
         icon: "trophy",
       },
     ],
@@ -62,10 +69,10 @@ const JORNADAS = {
       },
       {
         primary: false,
-        title: "Receba o link do app de criação",
-        sub: "para abrir no seu dispositivo.",
-        btn: "Enviar link",
-        action: "app",
+        title: "Receber link",
+        sub: "Deixe seu celular para receber o app de criação no seu dispositivo.",
+        btn: "Receber link",
+        action: "phone-link",
         helpBtn: "Saiba mais",
         helpAction: "app-help",
       },
@@ -172,8 +179,9 @@ const JORNADAS = {
     heroH1: ["Aprenda a criar", "experiências digitais."],
     heroH1ac: "Na prática. Com especialistas.",
     heroDesc:
-      "Aprenda a criar experiências digitais na prática e com especialistas. Expedição Roblox na Estrada é um evento presencial em várias capitais do país para criar no Roblox Studio e conectar essa habilidade com o mercado de trabalho.",
+      "Expedição Roblox na Estrada é um evento presencial em várias capitais do país para criar no Roblox Studio e conectar essa habilidade com o mercado de trabalho.",
     heroCtaTxt: "Quero me inscrever",
+    heroTarget: "evento",
     whyTitle: "O que você vive na Expedição:",
     why: [
       {
@@ -193,7 +201,7 @@ const JORNADAS = {
       },
       {
         title: "Comunidade real",
-        sub: "Você entra sem conhecer as pessoas da cidade e sai com uma rede de contatos.",
+        sub: "Você cria junto com outras pessoas e sai com uma rede de contatos.",
         icon: "network",
       },
     ],
@@ -291,10 +299,14 @@ const JORNADAS = {
     heroEy: "Expedição Roblox · Aprender a Criar",
     heroH1: ["Crie seu primeiro", "game no Roblox."],
     heroH1ac: "Do zero. No seu ritmo.",
-    heroDesc:
-      "Baixe o Roblox Studio, instale o plugin com tutoriais e comece a criar no celular ou no PC. A cada nova etapa, um novo aprendizado. <strong>Você aprende criando em cada etapa.</strong>",
+    heroDesc: {
+      desktop:
+        "Baixe o Roblox Studio, instale o plugin com tutoriais e comece a criar no PC ou Mac. A cada nova etapa, um novo aprendizado. <strong>Crie enquanto aprende!</strong>",
+      mobile:
+        "Comece pelo celular, salve sua ideia e continue no Roblox Studio quando estiver no PC. A cada nova etapa, um novo aprendizado. <strong>Crie enquanto aprende!</strong>",
+    },
     heroCtaTxt: "Começar a criar",
-    whyTitle: "Como funciona:",
+    whyTitle: "Como funciona a Expedição?",
     why: [
       {
         title: "Roblox Studio é visual",
@@ -303,26 +315,26 @@ const JORNADAS = {
       },
       {
         title: "PC ou celular",
-        sub: "No PC: Roblox Studio + plugin. No celular: emulador mobile que salva e continua no Studio depois.",
+        sub: "No PC: Roblox Studio + plugin. No celular: versão mobile que continua no PC depois.",
         icon: "device",
       },
       {
         title: "Você aprende criando",
-        sub: "Cada tutorial termina com algo real publicado no Roblox.",
+        sub: "Cada tutorial termina com uma publicação no Roblox.",
         icon: "people",
       },
       {
         title: "No seu ritmo",
-        sub: "Sem prazo, sem pressão. Você avança quando fizer sentido para você e depois pode seguir para a Jam.",
+        sub: "Sem prazo, sem pressão. Você avança no seu tempo e se inscreve na Game Jam quando quiser.",
         icon: "clock",
       },
     ],
-    nextTitle: "Por onde começar",
+    nextTitle: "Compare antes de começar",
     nextCards: [
       {
         primary: true,
         title: "Quero criar no PC",
-        sub: "Baixe o Roblox Studio com o plugin de tutoriais e comece pelo caminho mais completo.",
+        sub: "Baixe o Roblox Studio com o plugin de tutoriais para criar no PC.",
         btn: "⬇ Baixar Roblox Studio + plugin",
         action: "studio",
         helpBtn: "Saiba mais",
@@ -330,12 +342,12 @@ const JORNADAS = {
       },
       {
         primary: false,
-        title: "Ainda quer ajuda para escolher?",
-        sub: "Abra o chat e eu te ajudo a decidir por onde começar.",
-        btn: "Abrir chat",
-        action: "chat",
+        title: "Prefiro criar no celular",
+        sub: "Comece pelo celular e siga para o Studio quando quiser continuar no PC.",
+        btn: "Abrir emulador mobile",
+        action: "app",
         helpBtn: "Saiba mais",
-        helpAction: "chat",
+        helpAction: "app-help",
       },
     ],
     mobileNextCards: [
@@ -360,7 +372,7 @@ const JORNADAS = {
     ],
     bctaTitle: "Comece a criar hoje.",
     bctaAc: "É grátis.",
-    bctaSub: "Studio + plugin · versão mobile · tudo no seu ritmo",
+    bctaSub: "PC, celular e um caminho para evoluir no seu ritmo.",
     bctaBtn: "Escolher por onde começar",
     fabColor: "#E63946",
     questions: [
@@ -445,14 +457,35 @@ function App() {
   const [email, setEmail] = useState("");
   const [countdown, setCountdown] = useState(getCountdown());
   const [hasStarted, setHasStarted] = useState(false);
-  const [mockDestination, setMockDestination] = useState(null);
   const [pendingRedirect, setPendingRedirect] = useState(null);
   const [deviceIntro, setDeviceIntro] = useState(null);
   const [sitePromptDismissed, setSitePromptDismissed] = useState({ D: false, M: false });
+  const [phoneLinkModalOpen, setPhoneLinkModalOpen] = useState(false);
+  const [phoneLinkValue, setPhoneLinkValue] = useState("");
+  const [phoneLinkSent, setPhoneLinkSent] = useState(false);
+  const [eventSignupModalOpen, setEventSignupModalOpen] = useState(false);
+  const [eventSignupCity, setEventSignupCity] = useState("São Paulo");
+  const [eventSignupEmail, setEventSignupEmail] = useState("");
+  const [eventSignupSent, setEventSignupSent] = useState(false);
+  const [transbordoDevice, setTransbordoDevice] = useState("d");
+  const [transbordoTop, setTransbordoTop] = useState(0);
+  const [transbordoHeight, setTransbordoHeight] = useState(0);
+  const desktopScrollRef = useRef(null);
+  const mobileScrollRef = useRef(null);
 
   const jornada = useMemo(() => JORNADAS[currentJ], [currentJ]);
   const currentDevice = previewDevice || autoDevice;
   const isPreviewingMobileOnDesktop = autoDevice === "d" && currentDevice === "m";
+
+  function captureScrollTop(deviceMode) {
+    const node = deviceMode === "m" ? mobileScrollRef.current : desktopScrollRef.current;
+    return node ? node.scrollTop : 0;
+  }
+
+  function captureScrollHeight(deviceMode) {
+    const node = deviceMode === "m" ? mobileScrollRef.current : desktopScrollRef.current;
+    return node ? node.clientHeight : 0;
+  }
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -478,6 +511,12 @@ function App() {
     });
     setEmail("");
     setSitePromptDismissed({ D: false, M: false });
+    setPhoneLinkModalOpen(false);
+    setPhoneLinkValue("");
+    setPhoneLinkSent(false);
+    setEventSignupModalOpen(false);
+    setEventSignupEmail("");
+    setEventSignupSent(false);
     window.scrollTo(0, 0);
   }, [currentJ]);
 
@@ -684,7 +723,7 @@ function App() {
       }
 
       if (target === "redirect-community") {
-        setPendingRedirect("community");
+        openTransbordo("community", id === "M" ? "m" : "d");
         return prev;
       }
 
@@ -706,7 +745,7 @@ function App() {
             },
           };
         }
-        setPendingRedirect("studio");
+        openTransbordo("studio", id === "M" ? "m" : "d");
         return prev;
       }
 
@@ -728,12 +767,12 @@ function App() {
             },
           };
         }
-        setPendingRedirect("app");
+        openTransbordo("app", id === "M" ? "m" : "d");
         return prev;
       }
 
       if (target === "redirect-evento") {
-        setPendingRedirect("evento");
+        openEventSignup(id === "M" ? "m" : "d");
         return prev;
       }
 
@@ -793,15 +832,15 @@ function App() {
     }));
   }
 
-  function saveEmail(chatId = currentDevice === "d" ? "D" : "M") {
+  function saveEmail(chatId = currentDevice === "d" ? "D" : "M", forceTarget = null) {
     if (!email.trim()) {
       return;
     }
-    const target = chatState[chatId].collectEmailFor;
+    const target = forceTarget || chatState[chatId].collectEmailFor;
     const message =
       target === "app"
-        ? `Anotado! O link do app chega em <strong>${email.trim()}</strong> para você abrir no celular.`
-        : `Anotado! O link do Roblox Studio + plugin chega em <strong>${email.trim()}</strong> quando você estiver no PC.`;
+        ? `Anotado! Vou enviar o link do app para <strong>${email.trim()}</strong>.`
+        : `Anotado! Vou enviar o link do Roblox Studio + plugin para <strong>${email.trim()}</strong>.`;
     setChatState((prev) => ({
       ...prev,
       [chatId]: {
@@ -813,9 +852,49 @@ function App() {
     setEmail("");
   }
 
+  function submitPhoneLink() {
+    if (!phoneLinkValue.trim()) {
+      return;
+    }
+    setPhoneLinkSent(true);
+  }
+
+  function openTransbordo(destination, deviceMode) {
+    setTransbordoDevice(deviceMode);
+    setTransbordoTop(captureScrollTop(deviceMode));
+    setTransbordoHeight(captureScrollHeight(deviceMode));
+    setPendingRedirect(destination);
+  }
+
+  function openEventSignup(deviceMode) {
+    setTransbordoDevice(deviceMode);
+    setTransbordoTop(captureScrollTop(deviceMode));
+    setTransbordoHeight(captureScrollHeight(deviceMode));
+    setEventSignupModalOpen(true);
+    setEventSignupCity("São Paulo");
+    setEventSignupEmail("");
+    setEventSignupSent(false);
+  }
+
   function handleCardAction(action, isMobile) {
     const id = isMobile ? "M" : "D";
     const focusedMessage = cardFocusMessage(currentJ, action);
+    const deviceMode = isMobile ? "m" : "d";
+
+    if (currentJ === "expo" && action === "evento") {
+      openEventSignup(deviceMode);
+      return;
+    }
+
+    if (currentJ === "jam" && action === "phone-link") {
+      setTransbordoDevice(deviceMode);
+      setTransbordoTop(captureScrollTop(deviceMode));
+      setTransbordoHeight(captureScrollHeight(deviceMode));
+      setPhoneLinkModalOpen(true);
+      setPhoneLinkSent(false);
+      setPhoneLinkValue("");
+      return;
+    }
 
     if (isMobile && action === "studio") {
       setChatState((prev) => ({
@@ -857,7 +936,7 @@ function App() {
     }
 
     if (action === "community" || action === "studio" || action === "app") {
-      setPendingRedirect(action);
+      openTransbordo(action, deviceMode);
       return;
     }
 
@@ -927,23 +1006,6 @@ function App() {
     return <JourneyEntry onSelect={handleStart} autoDevice={autoDevice} />;
   }
 
-  if (pendingRedirect) {
-    return (
-      <RedirectConfirmScreen
-        destination={pendingRedirect}
-        onConfirm={() => {
-          setMockDestination(pendingRedirect);
-          setPendingRedirect(null);
-        }}
-        onCancel={() => setPendingRedirect(null)}
-      />
-    );
-  }
-
-  if (mockDestination) {
-    return <MockDestinationScreen destination={mockDestination} onBack={() => setMockDestination(null)} />;
-  }
-
   return (
     <div className={fontMode === "inter" ? "font-mode-inter" : ""}>
       <div className="shell-nav">
@@ -1011,7 +1073,7 @@ function App() {
                 </div>
                 <div className="burl">{jornada.url}</div>
               </div>
-              <div className="browser-body">
+              <div className="browser-body" ref={desktopScrollRef}>
                 <PageContent
                   jornada={jornada}
                   countdown={countdown}
@@ -1020,12 +1082,72 @@ function App() {
                   setEmail={setEmail}
                   saveEmail={saveEmail}
                   onCardAction={handleCardAction}
-                  onPrimaryAction={setPendingRedirect}
+                  onPrimaryAction={(destination) =>
+                    destination === "evento" ? openEventSignup("d") : openTransbordo(destination, "d")
+                  }
                   showSitePrompt={!sitePromptDismissed.D}
                   onDismissSitePrompt={() =>
                     setSitePromptDismissed((prev) => ({ ...prev, D: true }))
                   }
                 />
+                {pendingRedirect ? (
+                  <RedirectConfirmScreen
+                    inline
+                    deviceMode="desktop"
+                    anchorTop={transbordoTop}
+                    anchorHeight={transbordoHeight}
+                    destination={pendingRedirect}
+                    onConfirm={() => {
+                      const url = EXTERNAL_LINKS[pendingRedirect];
+                      if (url) {
+                        window.open(url, "_blank", "noopener,noreferrer");
+                      }
+                      setPendingRedirect(null);
+                    }}
+                    onCancel={() => setPendingRedirect(null)}
+                  />
+                ) : null}
+                {phoneLinkModalOpen ? (
+                  <PhoneLinkModal
+                    inline
+                    deviceMode="desktop"
+                    anchorTop={transbordoTop}
+                    anchorHeight={transbordoHeight}
+                    value={phoneLinkValue}
+                    onChange={setPhoneLinkValue}
+                    sent={phoneLinkSent}
+                    onClose={() => {
+                      setPhoneLinkModalOpen(false);
+                      setPhoneLinkSent(false);
+                      setPhoneLinkValue("");
+                    }}
+                    onSend={submitPhoneLink}
+                  />
+                ) : null}
+                {eventSignupModalOpen ? (
+                  <EventSignupModal
+                    inline
+                    deviceMode="desktop"
+                    anchorTop={transbordoTop}
+                    anchorHeight={transbordoHeight}
+                    city={eventSignupCity}
+                    email={eventSignupEmail}
+                    sent={eventSignupSent}
+                    onCityChange={setEventSignupCity}
+                    onEmailChange={setEventSignupEmail}
+                    onClose={() => {
+                      setEventSignupModalOpen(false);
+                      setEventSignupSent(false);
+                      setEventSignupEmail("");
+                    }}
+                    onSend={() => {
+                      if (!eventSignupEmail.trim()) {
+                        return;
+                      }
+                      setEventSignupSent(true);
+                    }}
+                  />
+                ) : null}
               </div>
               <ChatWidget
                 id="D"
@@ -1051,7 +1173,7 @@ function App() {
           <div className="phone">
             <div className="phone-notch" />
             <div className="phone-body">
-              <div className="phone-scroll">
+              <div className="phone-scroll" ref={mobileScrollRef}>
                 <PageContent
                   jornada={jornada}
                   countdown={countdown}
@@ -1060,12 +1182,72 @@ function App() {
                   setEmail={setEmail}
                   saveEmail={saveEmail}
                   onCardAction={handleCardAction}
-                  onPrimaryAction={setPendingRedirect}
+                  onPrimaryAction={(destination) =>
+                    destination === "evento" ? openEventSignup("m") : openTransbordo(destination, "m")
+                  }
                   showSitePrompt={!sitePromptDismissed.M}
                   onDismissSitePrompt={() =>
                     setSitePromptDismissed((prev) => ({ ...prev, M: true }))
                   }
                 />
+                {pendingRedirect ? (
+                  <RedirectConfirmScreen
+                    inline
+                    deviceMode="mobile"
+                    anchorTop={transbordoTop}
+                    anchorHeight={transbordoHeight}
+                    destination={pendingRedirect}
+                    onConfirm={() => {
+                      const url = EXTERNAL_LINKS[pendingRedirect];
+                      if (url) {
+                        window.open(url, "_blank", "noopener,noreferrer");
+                      }
+                      setPendingRedirect(null);
+                    }}
+                    onCancel={() => setPendingRedirect(null)}
+                  />
+                ) : null}
+                {phoneLinkModalOpen ? (
+                  <PhoneLinkModal
+                    inline
+                    deviceMode="mobile"
+                    anchorTop={transbordoTop}
+                    anchorHeight={transbordoHeight}
+                    value={phoneLinkValue}
+                    onChange={setPhoneLinkValue}
+                    sent={phoneLinkSent}
+                    onClose={() => {
+                      setPhoneLinkModalOpen(false);
+                      setPhoneLinkSent(false);
+                      setPhoneLinkValue("");
+                    }}
+                    onSend={submitPhoneLink}
+                  />
+                ) : null}
+                {eventSignupModalOpen ? (
+                  <EventSignupModal
+                    inline
+                    deviceMode="mobile"
+                    anchorTop={transbordoTop}
+                    anchorHeight={transbordoHeight}
+                    city={eventSignupCity}
+                    email={eventSignupEmail}
+                    sent={eventSignupSent}
+                    onCityChange={setEventSignupCity}
+                    onEmailChange={setEventSignupEmail}
+                    onClose={() => {
+                      setEventSignupModalOpen(false);
+                      setEventSignupSent(false);
+                      setEventSignupEmail("");
+                    }}
+                    onSend={() => {
+                      if (!eventSignupEmail.trim()) {
+                        return;
+                      }
+                      setEventSignupSent(true);
+                    }}
+                  />
+                ) : null}
               </div>
               <ChatWidget
                 id="M"
@@ -1117,7 +1299,7 @@ function JourneyEntry({ onSelect, autoDevice }) {
       <div className="entry-shell">
         <img src={expeditionLogo} alt="Expedição Roblox" className="entry-logo" />
         <div className="entry-kicker">Modo de teste</div>
-        <h1 className="entry-title">Escolha a jornada para simular.</h1>
+        <h1 className="entry-title">Escolha a jornada para abrir.</h1>
         <p className="entry-sub">
           Esta tela não existe no fluxo real. Ela serve apenas para abrir manualmente a jornada
           que viria do anúncio clicado.
@@ -1161,106 +1343,156 @@ function JourneyEntry({ onSelect, autoDevice }) {
   );
 }
 
-function MockDestinationScreen({ destination, onBack }) {
-  const screens = {
-    community: {
-      label: "Comunidade",
-      title: "Você foi para a comunidade da Game Jam no Discord.",
-      body: "Esta é uma tela simulada do mock para representar a saída da jornada para a comunidade da Game Jam.",
-      button: "Voltar para a jornada",
-    },
-    studio: {
-      label: "Studio",
-      title: "Você foi para o Roblox Studio + plugin.",
-      body: "Esta é uma tela simulada do mock para representar a saída da jornada para o download e início no Studio.",
-      button: "Voltar para a jornada",
-    },
-    app: {
-      label: "Mobile",
-      title: "Você foi para o emulador mobile.",
-      body: "Esta é uma tela simulada do mock para representar a saída da jornada para o caminho mobile.",
-      button: "Voltar para a jornada",
-    },
-    evento: {
-      label: "Inscrição",
-      title: "Você foi para a inscrição do evento.",
-      body: "Esta é uma tela simulada do mock para representar a saída da jornada para a inscrição do evento presencial.",
-      button: "Voltar para a jornada",
-    },
-    site: {
-      label: "Site completo",
-      title: "Você foi para o site completo da Expedição.",
-      body: "Esta é uma tela simulada do mock para representar a saída da jornada guiada para o site completo.",
-      button: "Voltar para a jornada",
-    },
-  };
-
-  const screen = screens[destination];
-
-  return (
-    <div className="mock-destination">
-      <div className="mock-destination-card">
-        <div className="mock-destination-ey">{screen.label}</div>
-        <h1 className="mock-destination-title">{screen.title}</h1>
-        <p className="mock-destination-body">{screen.body}</p>
-        <button className="mock-destination-btn" onClick={onBack}>
-          {screen.button}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function RedirectConfirmScreen({ destination, onConfirm, onCancel }) {
+function RedirectConfirmScreen({ destination, onConfirm, onCancel, inline = false, deviceMode = "desktop", anchorTop = 0, anchorHeight = 0 }) {
   const copy = {
     community: {
       label: "Comunidade",
-      title: "Você quer sair desta jornada guiada e entrar na tela simulada da comunidade da Game Jam no Discord?",
-      body: "Você vai sair desta jornada guiada e entrar na tela simulada da comunidade da Game Jam no Discord.",
-      confirm: "Ir para a comunidade",
+      title: "Você quer abrir a comunidade da Game Jam no Discord?",
+      body: "",
+      confirm: "Abrir comunidade",
     },
     studio: {
-      label: "Studio",
-      title: "Você quer sair desta jornada guiada e entrar na tela simulada do Roblox Studio + plugin?",
-      body: "Você vai sair desta jornada guiada e entrar na tela simulada do Roblox Studio + plugin.",
-      confirm: "Ir para o Studio",
+      label: "Baixar Roblox Studio",
+      title: "Você quer abrir o Roblox Studio + plugin?",
+      body: "",
+      confirm: "Abrir Studio + plugin",
     },
     app: {
       label: "Mobile",
-      title: "Você quer sair desta jornada guiada e entrar na tela simulada do emulador mobile?",
-      body: "Você vai sair desta jornada guiada e entrar na tela simulada do caminho mobile.",
-      confirm: "Ir para o mobile",
+      title: "Você quer abrir o caminho mobile?",
+      body: "",
+      confirm: "Abrir mobile",
     },
     evento: {
       label: "Inscrição",
-      title: "Você quer sair desta jornada guiada e entrar na tela simulada da inscrição do evento?",
-      body: "Você vai sair desta jornada guiada e entrar na tela simulada da inscrição do evento presencial.",
-      confirm: "Ir para a inscrição",
+      title: "Você quer abrir a inscrição do evento?",
+      body: "",
+      confirm: "Abrir inscrição",
     },
     site: {
       label: "Site completo",
-      title: "Você quer sair desta jornada guiada e entrar na tela simulada do site completo da Expedição?",
-      body: "Você vai sair desta jornada guiada e entrar na tela simulada do site completo da Expedição.",
-      confirm: "Ir para o site completo",
+      title: "Você quer abrir o site completo da Expedição?",
+      body: "",
+      confirm: "Abrir site completo",
     },
   };
 
   const screen = copy[destination];
 
   return (
-    <div className="mock-destination">
-      <div className="mock-destination-card">
+    <div
+      className={`${inline ? "frame-modal-backdrop" : "transbordo-backdrop"} ${deviceMode}`}
+      role="presentation"
+      style={inline ? { top: `${anchorTop}px`, height: `${anchorHeight || 0}px`, bottom: "auto" } : undefined}
+      onClick={onCancel}
+    >
+      <div className="mock-destination-card" onClick={(event) => event.stopPropagation()}>
         <div className="mock-destination-ey">{screen.label}</div>
         <h1 className="mock-destination-title">{screen.title}</h1>
-        <p className="mock-destination-body">{screen.body}</p>
+        {screen.body ? <p className="mock-destination-body">{screen.body}</p> : null}
         <div className="mock-destination-actions">
           <button className="mock-destination-btn" onClick={onConfirm}>
             {screen.confirm}
           </button>
           <button className="mock-destination-secondary" onClick={onCancel}>
-            Continuar na jornada
+            Vou continuar explorando o site
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function PhoneLinkModal({ value, onChange, onClose, onSend, sent, inline = false, deviceMode = "desktop", anchorTop = 0, anchorHeight = 0 }) {
+  return (
+    <div
+      className={`${inline ? "frame-phone-modal-backdrop" : "phone-modal-backdrop"} ${deviceMode}`}
+      role="presentation"
+      style={inline ? { top: `${anchorTop}px`, height: `${anchorHeight || 0}px`, bottom: "auto" } : undefined}
+      onClick={onClose}
+    >
+      <div className="phone-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
+        <div className="phone-modal-ey">Receber link</div>
+        <h2 className="phone-modal-title">Deixe seu telefone para receber o link no celular.</h2>
+        <p className="phone-modal-body">
+          Você clica, informa o número e a gente prepara o envio sem tirar você da página.
+        </p>
+        {sent ? (
+          <div className="phone-modal-done">
+            Perfeito. Vou usar <strong>{value}</strong> para enviar o link da criação mobile.
+          </div>
+        ) : (
+          <div className="phone-modal-form">
+            <input
+              type="tel"
+              inputMode="tel"
+              placeholder="(11) 99999-9999"
+              value={value}
+              onChange={(event) => onChange(event.target.value)}
+            />
+            <button onClick={onSend}>Enviar link</button>
+          </div>
+        )}
+        <button className="phone-modal-close" onClick={onClose}>
+          {sent ? "Fechar" : "Cancelar"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function EventSignupModal({
+  city,
+  email,
+  sent,
+  onCityChange,
+  onEmailChange,
+  onClose,
+  onSend,
+  inline = false,
+  deviceMode = "desktop",
+  anchorTop = 0,
+  anchorHeight = 0,
+}) {
+  return (
+    <div
+      className={`${inline ? "frame-event-modal-backdrop" : "event-modal-backdrop"} ${deviceMode}`}
+      role="presentation"
+      style={inline ? { top: `${anchorTop}px`, height: `${anchorHeight || 0}px`, bottom: "auto" } : undefined}
+      onClick={onClose}
+    >
+      <div className="event-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
+        <div className="event-modal-ey">Inscrição</div>
+        <h2 className="event-modal-title">Preencha sua inscrição para a Expedição.</h2>
+        <p className="event-modal-body">
+          Escolha sua cidade e deixe seu email para seguir com a vaga no evento presencial.
+        </p>
+        {sent ? (
+          <div className="event-modal-done">
+            Perfeito. Recebemos a inscrição para <strong>{city}</strong> e vamos usar <strong>{email}</strong> para seguir com a confirmação da vaga.
+          </div>
+        ) : (
+          <div className="event-modal-form">
+            <select value={city} onChange={(event) => onCityChange(event.target.value)}>
+              {CIDADES_EVENTO.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            <input
+              type="email"
+              inputMode="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(event) => onEmailChange(event.target.value)}
+            />
+            <button onClick={onSend}>Abrir inscrição</button>
+          </div>
+        )}
+        <button className="event-modal-close" onClick={onClose}>
+          {sent ? "Fechar" : "Cancelar"}
+        </button>
       </div>
     </div>
   );
@@ -1390,10 +1622,17 @@ function PageContent({
           </span>
         </h1>
         <div className="hero-bot">
-          <p
-            className="hero-desc"
-            dangerouslySetInnerHTML={{ __html: jornada.heroDesc }}
-          />
+        <p
+          className="hero-desc"
+          dangerouslySetInnerHTML={{
+            __html:
+              typeof jornada.heroDesc === "string"
+                ? jornada.heroDesc
+                : isMobile
+                  ? jornada.heroDesc.mobile
+                  : jornada.heroDesc.desktop,
+          }}
+        />
           <div className="hero-acts">
             <button
               className="btn-main"
@@ -1464,19 +1703,22 @@ function PageContent({
               onClick={() => onCardAction(card.action, isMobile)}
             >
               <div className="ns-ic" style={{ color: card.primary ? "#0A0A0A" : jornada.color }}>
-                {card.primary ? <DesktopIcon /> : <PhoneIcon />}
+                {card.action === "app" ? <PhoneIcon /> : <DesktopIcon />}
               </div>
               <div className="ns-title">{card.title}</div>
               <div className="ns-sub">{card.sub}</div>
-              {card.hasEmail && isMobile ? (
+              {card.hasEmail ? (
                 <div className="email-row" onClick={(event) => event.stopPropagation()}>
                   <input
-                    type="email"
-                    placeholder="seu@email.com"
+                    type={card.contactType || "email"}
+                    inputMode={card.contactType === "tel" ? "tel" : undefined}
+                    placeholder={card.contactPlaceholder || "seu@email.com"}
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                   />
-                  <button onClick={saveEmail}>Enviar</button>
+                  <button onClick={() => saveEmail(isMobile ? "M" : "D", card.action === "app" ? "app" : "studio")}>
+                    Enviar
+                  </button>
                 </div>
               ) : null}
               <button
@@ -1484,8 +1726,8 @@ function PageContent({
                 style={card.primary ? { background: "#0A0A0A", color: "#fff" } : undefined}
                 onClick={(event) => {
                   event.stopPropagation();
-                  if (card.hasEmail && isMobile) {
-                    saveEmail();
+                  if (card.hasEmail) {
+                    saveEmail(isMobile ? "M" : "D", card.action === "app" ? "app" : "studio");
                     return;
                   }
                   onCardAction(card.action, isMobile);
@@ -1876,7 +2118,7 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "expo" && action === "evento") {
     return {
       type: "options",
-      text: "Se você quer ir para o evento presencial, eu posso te mostrar o passo a passo da vaga ou te levar direto para a inscrição simulada.",
+      text: "Se você quer ir para o evento presencial, eu posso te mostrar o passo a passo da vaga ou te levar direto para a inscrição.",
       choices: [
         { action: "Ver como funciona", target: "explain-evento" },
         { action: "Acessar formulário", target: "explain-evento" },
