@@ -23,7 +23,7 @@ const JORNADAS = {
     heroH1: ["Destrave seu talento,", "crie experiências incríveis"],
     heroH1ac: "e concorra a prêmios.",
     heroDesc:
-      "A Game Jam é o momento de transformar sua ideia em game. <strong>Você testa, aprende e cria em equipe.</strong>",
+      "A Game Jam é o momento de transformar sua ideia em criação digital. <strong>Você testa, aprende e cria em equipe.</strong>",
     heroCtaTxt: "Entrar na comunidade da Game Jam",
     heroTarget: "community",
     whyTitle: "Participar é simples!",
@@ -35,7 +35,7 @@ const JORNADAS = {
       },
       {
         title: "Começa do zero hoje",
-        sub: "Baixa o Studio grátis, entra no Discord e já tem mentores prontos.",
+        sub: "Baixa o Studio grátis, entra no Discord e aproveite os conteúdos e experiências que preparamos para você.",
         icon: "device",
       },
       {
@@ -74,7 +74,7 @@ const JORNADAS = {
       {
         primary: true,
         title: "App de criação mobile",
-        sub: "Cria pelo celular. Salva e ativa no Studio depois.",
+        sub: "Crie sua experiência jogável no celular, salve e ative no Roblox Studio no seu PC.",
         btn: "→ Abrir app",
         action: "app",
         helpBtn: "Saiba mais",
@@ -82,8 +82,8 @@ const JORNADAS = {
       },
       {
         primary: false,
-        title: "Receber link do Roblox Studio + plugin",
-        sub: "Te mandamos o link quando estiver no PC.",
+        title: "Obter link da versão PC",
+        sub: "Receba o link para rodar o Roblox Studio no PC.",
         btn: "Receber por email",
         action: "email",
         hasEmail: true,
@@ -93,7 +93,7 @@ const JORNADAS = {
     ],
     bctaTitle: "Tudo no esquema pra criar?",
     bctaAc: "Então bora pra Jam!",
-    bctaSub: "Comunidade da Game Jam no Discord",
+    bctaSub: "",
     bctaBtn: "Entrar na comunidade da Game Jam",
     bctaTarget: "community",
     fabColor: "#F5B731",
@@ -330,19 +330,19 @@ const JORNADAS = {
       },
       {
         primary: false,
-        title: "Prefere continuar no celular?",
-        sub: "Receba o link do app de criação para abrir no seu dispositivo.",
-        btn: "Enviar link para o celular",
-        action: "app",
+        title: "Ainda quer ajuda para escolher?",
+        sub: "Abra o chat e eu te ajudo a decidir por onde começar.",
+        btn: "Abrir chat",
+        action: "chat",
         helpBtn: "Saiba mais",
-        helpAction: "app-help",
+        helpAction: "chat",
       },
     ],
     mobileNextCards: [
       {
         primary: true,
         title: "Quero começar no celular",
-        sub: "Crie agora no mobile e continue no Studio depois, quando tiver um PC.",
+        sub: "Crie sua experiência jogável no celular, salve e ative no Roblox Studio no seu PC.",
         btn: "→ Abrir emulador mobile",
         action: "app",
         helpBtn: "Saiba mais",
@@ -839,6 +839,23 @@ function App() {
       return;
     }
 
+    if (currentJ === "jam" && action === "community") {
+      const focusedMessage = cardFocusMessage(currentJ, action);
+      setChatState((prev) => ({
+        ...prev,
+        [id]: {
+          ...prev[id],
+          open: true,
+          answered: [],
+          cidade: null,
+          explanation: null,
+          flow: action,
+          msgs: [focusedMessage],
+        },
+      }));
+      return;
+    }
+
     if (action === "community" || action === "studio" || action === "app") {
       setPendingRedirect(action);
       return;
@@ -1318,7 +1335,11 @@ function PageContent({
             className="cd-btn"
             style={{ background: jornada.color, color: "#0A0A0A" }}
             onClick={() =>
-              jornada.heroTarget ? onPrimaryAction(jornada.heroTarget) : scrollToId(nextSectionId)
+              jornada.heroTarget
+                ? jornada.label === "Game Jam" && jornada.heroTarget === "community"
+                  ? onCardAction("community", isMobile)
+                  : onPrimaryAction(jornada.heroTarget)
+                : scrollToId(nextSectionId)
             }
           >
             Participar agora →
@@ -1380,6 +1401,8 @@ function PageContent({
               onClick={() =>
                 jornada.label === "Aprender"
                   ? scrollToId(nextSectionId)
+                  : jornada.label === "Game Jam" && jornada.heroTarget === "community"
+                    ? onCardAction("community", isMobile)
                   : jornada.heroTarget
                     ? onPrimaryAction(jornada.heroTarget)
                     : scrollToId(nextSectionId)
@@ -1504,7 +1527,12 @@ function PageContent({
             style={{ background: jornada.color, color: "#0A0A0A" }}
             onClick={() => {
               if (jornada.label === "Aprender") {
-                scrollToId(nextSectionId);
+                onCardAction("chat", isMobile);
+                return;
+              }
+
+              if (jornada.label === "Game Jam" && jornada.bctaTarget === "community") {
+                onCardAction("community", isMobile);
                 return;
               }
 
@@ -1516,7 +1544,7 @@ function PageContent({
             <ChatIcon />
             {jornada.bctaBtn}
           </button>
-          {jornada.label === "Game Jam" ? <div className="bc-note">Grátis para criar</div> : null}
+          {jornada.label === "Game Jam" ? <div className="bc-note">Todas as ações da Expedição Roblox são gratuitas</div> : null}
         </div>
       </div>
     </div>
@@ -1833,6 +1861,18 @@ function cardFocusMessage(currentJ, action) {
     };
   }
 
+  if (currentJ === "jam" && action === "community") {
+    return {
+      type: "options",
+      text: "A comunidade da Game Jam existe para você não criar sozinho: ali você acompanha as experiências da Jam, tira dúvidas e participa com mais segurança. A gente cuida do espaço para manter o clima saudável e apoiar seu desenvolvimento. O que você quer fazer agora?",
+      choices: [
+        { action: "Ver como funciona", target: "explain-jam" },
+        { action: "Entrar na comunidade", target: "redirect-community" },
+        { action: "Ainda tenho dúvida", target: "duvida-criar" },
+      ],
+    };
+  }
+
   if (currentJ === "expo" && action === "evento") {
     return {
       type: "options",
@@ -1860,9 +1900,9 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "aprender" && action === "studio") {
     return {
       type: "options",
-      text: "Perfeito. Como você escolheu começar pelo PC, o próximo passo é o Studio com o plugin de tutoriais. Quer ver o passo a passo ou prefere seguir direto?",
+      text: "Perfeito. No PC você cria com o Roblox Studio + plugin: é o caminho mais completo para montar, testar e publicar. Quer ver esse fluxo em detalhe ou comparar com o celular?",
       choices: [
-        { action: "Ver como funciona", target: "explain-studio" },
+        { action: "Ver o fluxo do PC", target: "explain-studio" },
         { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
         { action: "Comparar com o celular", target: "duvida-app" },
       ],
@@ -1872,9 +1912,9 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "aprender" && action === "studio-help") {
     return {
       type: "options",
-      text: "Como você já abriu o caminho do PC, eu vou te mostrar só o que importa: no Studio você cria com mais recursos, usa o plugin com tutoriais e consegue seguir pelo fluxo mais completo. O que você quer fazer agora?",
+      text: "No PC você cria com mais recursos: o Roblox Studio + plugin te dá o caminho mais completo para construir, testar e evoluir sua ideia. Se quiser, eu comparo com o celular.",
       choices: [
-        { action: "Ver como funciona", target: "explain-studio" },
+        { action: "Ver o fluxo do PC", target: "explain-studio" },
         { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
         { action: "Comparar com o celular", target: "duvida-app" },
       ],
@@ -1884,9 +1924,9 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "aprender" && action === "app") {
     return {
       type: "options",
-      text: "Perfeito. Como você escolheu começar pelo celular, o próximo passo é abrir o emulador mobile e depois continuar no Studio quando tiver um PC. Quer ver esse fluxo ou prefere abrir direto?",
+      text: "Perfeito. No celular você começa agora pelo emulador mobile, testa sua ideia e depois continua no Studio quando tiver um PC. Quer ver esse fluxo em detalhe ou comparar com o PC?",
       choices: [
-        { action: "Ver como funciona", target: "explain-app" },
+        { action: "Ver o fluxo do celular", target: "explain-app" },
         { action: "Abrir emulador mobile", target: "redirect-app" },
         { action: "Comparar com o PC", target: "duvida-studio" },
       ],
@@ -1896,9 +1936,9 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "aprender" && action === "app-help") {
     return {
       type: "options",
-      text: "Como você já abriu o caminho do celular, eu vou direto ao ponto: no app de criação mobile você começa agora, testa suas ideias e salva para continuar depois no Studio. O que você quer fazer agora?",
+      text: "No celular você tem um começo mais rápido: abre o emulador, testa suas ideias e guarda o progresso para continuar no Studio depois. Se quiser, eu comparo com o PC.",
       choices: [
-        { action: "Ver como funciona", target: "explain-app" },
+        { action: "Ver o fluxo do celular", target: "explain-app" },
         { action: "Abrir emulador mobile", target: "redirect-app" },
         { action: "Ver caminho no PC", target: "duvida-studio" },
       ],
@@ -1908,7 +1948,7 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "aprender" && action === "chat") {
     return {
       type: "options",
-      text: "Posso te ajudar a decidir o melhor caminho para começar a criar. O que você quer resolver agora?",
+      text: "Aqui eu comparo os dois caminhos de forma simples: no PC você tem o Studio com mais recursos; no celular você começa agora no emulador e continua depois no Studio. Qual você quer entender primeiro?",
       choices: [
         { action: "Quero criar no PC", target: "duvida-studio" },
         { action: "Quero começar no celular", target: "duvida-app" },
@@ -1946,9 +1986,9 @@ function contextualChoiceMessage(currentJ, target) {
   if (currentJ === "aprender" && target === "duvida-studio") {
     return {
       type: "options",
-      text: "Se a sua dúvida é sobre o caminho do PC, a resposta curta é: vale a pena quando você já tem acesso a PC ou Mac e quer criar com mais recursos desde o começo. Quer ver o passo a passo ou seguir direto?",
+      text: "No PC ou Mac você faz o caminho mais completo: Roblox Studio + plugin, mais recursos para criar e mais controle para evoluir a ideia. Quer ver o passo a passo ou comparar com o celular?",
       choices: [
-        { action: "Ver como funciona", target: "explain-studio" },
+        { action: "Ver o fluxo do PC", target: "explain-studio" },
         { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
         { action: "Comparar com o celular", target: "duvida-app" },
       ],
@@ -1958,9 +1998,9 @@ function contextualChoiceMessage(currentJ, target) {
   if (currentJ === "aprender" && target === "duvida-app") {
     return {
       type: "options",
-      text: "Se a sua dúvida é sobre o caminho do celular, a resposta curta é: ele vale mais a pena quando você quer começar agora no mobile e continuar no Studio depois. Quer ver esse fluxo ou abrir direto?",
+      text: "No celular você começa mais rápido: abre o emulador, testa a ideia agora e continua no Studio depois, quando tiver PC. Quer ver esse fluxo ou comparar com o computador?",
       choices: [
-        { action: "Ver como funciona", target: "explain-app" },
+        { action: "Ver o fluxo do celular", target: "explain-app" },
         { action: "Abrir emulador mobile", target: "redirect-app" },
         { action: "Comparar com o PC", target: "duvida-studio" },
       ],
@@ -1970,7 +2010,7 @@ function contextualChoiceMessage(currentJ, target) {
   if (currentJ === "aprender" && target === "duvida-criar") {
     return {
       type: "options",
-      text: "Se você tem PC agora, vá de Studio. Se você só está com o celular, comece no emulador e continue depois no Studio. Qual caminho combina com o seu momento agora?",
+      text: "Comparando sem enrolar: no PC você cria no Studio com mais recursos e mais controle; no celular você começa agora no emulador e continua depois no Studio. Qual caminho faz mais sentido para você agora?",
       choices: [
         { action: "Quero criar no PC", target: "duvida-studio" },
         { action: "Quero começar no celular", target: "duvida-app" },
