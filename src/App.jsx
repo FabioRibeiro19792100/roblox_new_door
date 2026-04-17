@@ -11,7 +11,7 @@ const EXTERNAL_LINKS = {
   studio: "",
   app: "",
   evento: "",
-  site: "",
+  site: "https://roblox.mastertech.com.br/",
 };
 
 const JORNADAS = {
@@ -69,9 +69,9 @@ const JORNADAS = {
       },
       {
         primary: false,
-        title: "Receber link",
-        sub: "Deixe seu celular para receber o app de criação no seu dispositivo.",
-        btn: "Receber link",
+        title: "Prefiro começar no celular",
+        sub: "Comece pelo celular e siga para o Studio quando quiser continuar no PC.",
+        btn: "Prefiro começar no celular",
         action: "phone-link",
         helpBtn: "Saiba mais",
         helpAction: "app-help",
@@ -89,8 +89,8 @@ const JORNADAS = {
       },
       {
         primary: false,
-        title: "Obter link da versão PC",
-        sub: "Receba o link para rodar o Roblox Studio no PC.",
+        title: "Quero criar no PC",
+        sub: "Cadastre seu email para receber o Roblox Studio + plugin no computador.",
         btn: "Receber por email",
         action: "email",
         hasEmail: true,
@@ -147,7 +147,7 @@ const JORNADAS = {
         "Quando estiver confortável, entra na comunidade da Game Jam",
         "Publica seu game e depois o inscreve na competição",
       ],
-      btn: "Visualizar fluxo",
+      btn: "Baixar agora",
       target: "redirect-studio",
     },
     explainApp: {
@@ -158,7 +158,7 @@ const JORNADAS = {
         "Salva seu progresso e retoma a criação do game de onde parou quando puder ativar o Studio num PC ou Mac",
         "Depois você entra na comunidade da Jam, melhora ainda mais o seu game e então se inscreve na competição",
       ],
-      btn: "Ver fluxo do app",
+      btn: "Conhecer no celular",
       target: "redirect-app",
     },
   },
@@ -407,7 +407,7 @@ const JORNADAS = {
         "Publica experiências virtuais enquanto aprende",
         "Quando quiser, pode entrar na Game Jam",
       ],
-      btn: "Visualizar fluxo",
+      btn: "Baixar agora",
       target: "redirect-studio",
     },
     explainApp: {
@@ -419,7 +419,7 @@ const JORNADAS = {
         "Quando tiver acesso a um PC ou Mac, ativa no Studio",
         "Depois pode seguir para a Game Jam",
       ],
-      btn: "Ver fluxo do app",
+      btn: "Conhecer no celular",
       target: "redirect-app",
     },
   },
@@ -435,6 +435,24 @@ const cityMap = {
   Brasilia: "brasilia",
 };
 
+const eventCityLabels = {
+  sp: "São Paulo - 9/5",
+  rj: "Rio de Janeiro - Lembrar-me",
+  recife: "Recife - Lembrar-me",
+  poa: "Porto Alegre - Lembrar-me",
+  manaus: "Manaus - Lembrar-me",
+  brasilia: "Brasília - Lembrar-me",
+};
+
+const eventCityOptions = [
+  { value: "sp", label: "São Paulo - 9/5" },
+  { value: "rj", label: "Rio de Janeiro - Lembrar-me" },
+  { value: "recife", label: "Recife - Lembrar-me" },
+  { value: "poa", label: "Porto Alegre - Lembrar-me" },
+  { value: "manaus", label: "Manaus - Lembrar-me" },
+  { value: "brasilia", label: "Brasília - Lembrar-me" },
+];
+
 const initialChat = () => ({
   msgs: [],
   open: false,
@@ -444,6 +462,7 @@ const initialChat = () => ({
   flow: "general",
   collectEmailFor: null,
   introSeen: false,
+  history: [],
 });
 
 function App() {
@@ -462,7 +481,7 @@ function App() {
   const [phoneLinkValue, setPhoneLinkValue] = useState("");
   const [phoneLinkSent, setPhoneLinkSent] = useState(false);
   const [eventSignupModalOpen, setEventSignupModalOpen] = useState(false);
-  const [eventSignupCity, setEventSignupCity] = useState("São Paulo");
+  const [eventSignupCity, setEventSignupCity] = useState("sp");
   const [eventSignupEmail, setEventSignupEmail] = useState("");
   const [eventSignupSent, setEventSignupSent] = useState(false);
   const [transbordoDevice, setTransbordoDevice] = useState("d");
@@ -504,8 +523,8 @@ function App() {
 
   useEffect(() => {
     setChatState({
-      D: startAnamnese({ ...initialChat(), open: true }, currentJ),
-      M: startAnamnese({ ...initialChat(), open: true }, currentJ),
+      D: startAnamnese({ ...initialChat(), open: false }, currentJ),
+      M: startAnamnese({ ...initialChat(), open: false }, currentJ),
     });
     setEmail("");
     setSitePromptDismissed({ D: false, M: false });
@@ -553,7 +572,11 @@ function App() {
           open: false,
         };
       } else {
-        const shouldResumeGeneral = state.flow === "general" && state.msgs.length > 0;
+        const lastMsg = state.msgs[state.msgs.length - 1];
+        const isTerminalGeneral =
+          state.flow === "general" &&
+          (state.explanation || state.collectEmailFor || lastMsg?.type === "result");
+        const shouldResumeGeneral = state.flow === "general" && state.msgs.length > 0 && !isTerminalGeneral;
 
         if (shouldResumeGeneral) {
           next[id] = {
@@ -568,12 +591,32 @@ function App() {
               introSeen: state.introSeen,
             },
             currentJ,
-            !state.introSeen
+            state.introSeen ? false : true
           );
         }
       }
 
       return next;
+    });
+  }
+
+  function goBackChat(id) {
+    setChatState((prev) => {
+      const state = prev[id];
+      if (!state.history.length) {
+        return prev;
+      }
+
+      const history = [...state.history];
+      const previous = history.pop();
+      return {
+        ...prev,
+        [id]: {
+          ...previous,
+          open: true,
+          history,
+        },
+      };
     });
   }
 
@@ -594,6 +637,7 @@ function App() {
         answered,
         cidade: isCidade ? cityMap[opt] || "outra" : state.cidade,
         msgs,
+        history: [...state.history, state],
       };
 
       const nextIdx = idx + 1;
@@ -633,6 +677,7 @@ function App() {
         ...prev,
         [id]: {
           ...prev[id],
+          history: [...prev[id].history, prev[id]],
           flow: "general",
           introSeen: true,
           msgs: [
@@ -671,6 +716,10 @@ function App() {
     }
 
     if (target === "goto-aprender") {
+      if (currentJ === "expo") {
+        openTransbordo("site", id === "M" ? "m" : "d");
+        return;
+      }
       setCurrentJ("aprender");
       return;
     }
@@ -684,6 +733,7 @@ function App() {
           ...prev,
           [id]: {
             ...state,
+            history: [...state.history, state],
             msgs: [...state.msgs, contextualResult],
             explanation: null,
           },
@@ -695,6 +745,7 @@ function App() {
           ...prev,
           [id]: {
             ...state,
+            history: [...state.history, state],
             explanation: JORNADAS[currentJ].explainStudio,
           },
         };
@@ -705,6 +756,7 @@ function App() {
           ...prev,
           [id]: {
             ...state,
+            history: [...state.history, state],
             explanation: JORNADAS[currentJ].explainApp,
           },
         };
@@ -715,6 +767,7 @@ function App() {
           ...prev,
           [id]: {
             ...state,
+            history: [...state.history, state],
             explanation: JORNADAS[currentJ].explain,
           },
         };
@@ -737,7 +790,7 @@ function App() {
                 ...state.msgs,
                 {
                   type: "ai",
-                  text: "Como você está no celular, eu posso te mandar o link do Roblox Studio + plugin por email para você abrir depois no PC ou Mac.",
+                  text: "Como você está no celular, eu posso te mandar o Roblox Studio + plugin por email para criar no PC ou Mac.",
                 },
               ],
             },
@@ -759,7 +812,7 @@ function App() {
                 ...state.msgs,
                 {
                   type: "ai",
-                  text: "Como você está no desktop, eu posso te mandar o link do app de criação mobile por email para você abrir depois no seu celular.",
+                  text: "Como você está no desktop, eu posso te mandar o app de criação por email para começar no celular.",
                 },
               ],
             },
@@ -779,6 +832,7 @@ function App() {
           ...prev,
           [id]: {
             ...state,
+            history: [...state.history, state],
             explanation: JORNADAS[currentJ].explain,
           },
         };
@@ -799,6 +853,7 @@ function App() {
         ...prev,
         [id]: {
           ...state,
+          history: [...state.history, state],
           msgs: [
             ...state.msgs,
             {
@@ -839,12 +894,30 @@ function App() {
       target === "app"
         ? `Anotado! Vou enviar o link do app para <strong>${email.trim()}</strong>.`
         : `Anotado! Vou enviar o link do Roblox Studio + plugin para <strong>${email.trim()}</strong>.`;
+    const nextStep =
+      target === "app"
+        ? {
+            type: "options",
+            text: "Perfeito. Se quiser, eu também posso te mostrar o caminho para seguir explorando agora.",
+            choices: [
+              { action: "Conhecer no celular", target: "redirect-app" },
+              { action: "Continuar no site", target: "browse-journey" },
+            ],
+          }
+        : {
+            type: "options",
+            text: "Perfeito. Se quiser, eu também posso te mostrar o próximo passo depois do email.",
+            choices: [
+              { action: "Baixar agora", target: "redirect-studio" },
+              { action: "Continuar no site", target: "browse-journey" },
+            ],
+          };
     setChatState((prev) => ({
       ...prev,
       [chatId]: {
         ...prev[chatId],
         collectEmailFor: null,
-        msgs: [...prev[chatId].msgs, { type: "ai", text: message, html: true }],
+        msgs: [...prev[chatId].msgs, { type: "ai", text: message, html: true }, nextStep],
       },
     }));
     setEmail("");
@@ -869,7 +942,7 @@ function App() {
     setTransbordoTop(captureScrollTop(deviceMode));
     setTransbordoHeight(captureScrollHeight(deviceMode));
     setEventSignupModalOpen(true);
-    setEventSignupCity("São Paulo");
+    setEventSignupCity("sp");
     setEventSignupEmail("");
     setEventSignupSent(false);
   }
@@ -908,7 +981,7 @@ function App() {
           msgs: [
                 {
                   type: "ai",
-                  text: "Como você está no celular, eu posso te mandar o link do Roblox Studio + plugin por email para você abrir depois no PC ou Mac.",
+                  text: "Como você está no celular, eu posso te mandar o Roblox Studio + plugin por email para criar no PC ou Mac.",
                 },
               ],
             },
@@ -972,10 +1045,10 @@ function App() {
           msgs: [
             {
               type: "options",
-              text: "Como você está no desktop, eu posso enviar para o seu email um link com a versão mobile do app de criação.",
+              text: "Como você está no desktop, eu posso enviar para o seu email o app de criação para começar no celular.",
               choices: [
                 { action: "Entendi, vou deixar meu email", target: "fechar-duvida-email" },
-                { action: "Ver opção mobile", target: "duvida-app" },
+                { action: "Prefiro começar no celular", target: "duvida-app" },
               ],
             },
           ],
@@ -1153,11 +1226,12 @@ function App() {
                 state={chatState.D}
                 email={email}
                 setEmail={setEmail}
-                saveEmail={saveEmail}
-                toggleChat={toggleChat}
-                answerQ={answerQ}
-                handleChoice={handleChoice}
-                restartChat={restartChat}
+              saveEmail={saveEmail}
+              toggleChat={toggleChat}
+              goBackChat={goBackChat}
+              answerQ={answerQ}
+              handleChoice={handleChoice}
+              restartChat={restartChat}
                 closeExplanation={closeExplanation}
               />
               <div className={`frame-blur ${chatState.D.open ? "on" : ""}`} />
@@ -1253,11 +1327,12 @@ function App() {
                 state={chatState.M}
                 email={email}
                 setEmail={setEmail}
-                saveEmail={saveEmail}
-                toggleChat={toggleChat}
-                answerQ={answerQ}
-                handleChoice={handleChoice}
-                restartChat={restartChat}
+              saveEmail={saveEmail}
+              toggleChat={toggleChat}
+              goBackChat={goBackChat}
+              answerQ={answerQ}
+              handleChoice={handleChoice}
+              restartChat={restartChat}
                 closeExplanation={closeExplanation}
                 mobile
               />
@@ -1410,14 +1485,14 @@ function PhoneLinkModal({ value, onChange, onClose, onSend, sent, inline = false
       onClick={onClose}
     >
       <div className="phone-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
-        <div className="phone-modal-ey">Receber link</div>
-        <h2 className="phone-modal-title">Cadastre seu celular para receber o link.</h2>
+        <div className="phone-modal-ey">Receber no celular</div>
+        <h2 className="phone-modal-title">Cadastre seu celular para receber o app.</h2>
         <p className="phone-modal-body">
-          Clique, informe seu número e receba o link sem nem sair desta página!
+          Clique, informe seu número e receba o app sem nem sair desta página!
         </p>
         {sent ? (
           <div className="phone-modal-done">
-            Perfeito. Vou usar <strong>{value}</strong> para enviar o link da criação mobile.
+            Perfeito. Vou usar <strong>{value}</strong> para enviar o app de criação.
           </div>
         ) : (
           <div className="phone-modal-form">
@@ -1467,14 +1542,15 @@ function EventSignupModal({
         </p>
         {sent ? (
           <div className="event-modal-done">
-            Perfeito. Recebemos a inscrição para <strong>{city}</strong> e vamos usar <strong>{email}</strong> para seguir com a confirmação da vaga.
+            Perfeito. Recebemos a inscrição para <strong>{eventCityLabels[city] || city}</strong> e vamos usar{" "}
+            <strong>{email}</strong> para seguir com a confirmação da vaga.
           </div>
         ) : (
           <div className="event-modal-form">
             <select value={city} onChange={(event) => onCityChange(event.target.value)}>
-              {CIDADES_EVENTO.map((option) => (
-                <option key={option} value={option}>
-                  {option}
+              {eventCityOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
                 </option>
               ))}
             </select>
@@ -1799,6 +1875,7 @@ function ChatWidget({
   setEmail,
   saveEmail,
   toggleChat,
+  goBackChat,
   answerQ,
   handleChoice,
   restartChat,
@@ -1943,7 +2020,7 @@ function ChatWidget({
           {state.collectEmailFor ? (
             <div className="cw-explain">
               <div className="cw-ex-title">
-                {state.collectEmailFor === "app" ? "Receber link do app" : "Receber link do Roblox Studio + plugin"}
+                {state.collectEmailFor === "app" ? "Começar no celular" : "Criar no PC"}
               </div>
               <div className="cw-ex-list">
                 <div className="cw-ex-item">
@@ -1955,8 +2032,8 @@ function ChatWidget({
                   </div>
                   <span>
                     {state.collectEmailFor === "app"
-                      ? "Cadastre seu email para receber o app de criação e utilizá-lo no seu celular."
-                      : "Cadastre seu email para receber o Roblox Studio + plugin e utilizá-lo no seu computador."}
+                      ? "Cadastre seu email para receber o app de criação e usar no seu celular."
+                      : "Cadastre seu email para receber o Roblox Studio + plugin e usar no seu computador."}
                   </span>
                 </div>
               </div>
@@ -1970,6 +2047,12 @@ function ChatWidget({
                 <button onClick={() => saveEmail(id)}>Enviar</button>
               </div>
             </div>
+          ) : null}
+
+          {state.history.length > 0 ? (
+            <button className="cw-back" onClick={() => goBackChat(id)}>
+              ← Voltar um passo
+            </button>
           ) : null}
         </div>
       </div>
@@ -2045,11 +2128,11 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "jam" && action === "studio") {
     return {
       type: "options",
-      text: "Se você quer ter mais recursos disponíveis para desenvolver seu game, participar da Game Jam e acessar a comunidade no Discord, baixar o Roblox Studio + plugin de tutoriais é a melhor opção. Quer ver como esse fluxo funciona ou já quer fazer o download?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Visualizar fluxo", target: "explain-studio" },
-        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
-        { action: "Ainda tenho dúvida", target: "duvida-studio" },
+        { action: "Baixar agora", target: "redirect-studio" },
+        { action: "Prefiro começar no celular", target: "duvida-app" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
@@ -2057,11 +2140,11 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "jam" && action === "studio-help") {
     return {
       type: "options",
-      text: "Se você quer ter mais recursos disponíveis para desenvolver seu game, participar da Game Jam e acessar a comunidade no Discord, baixar o Roblox Studio + plugin de tutoriais é a melhor opção. Quer ver como esse fluxo funciona ou já quer fazer o download?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Visualizar fluxo", target: "explain-studio" },
-        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
-        { action: "Ver opção mobile", target: "duvida-app" },
+        { action: "Baixar agora", target: "redirect-studio" },
+        { action: "Prefiro começar no celular", target: "duvida-app" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
@@ -2069,11 +2152,11 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "jam" && action === "app") {
     return {
       type: "options",
-      text: "Se você estiver no celular, temos um app para você começar a criar no seu dispositivo mesmo, sem depender de um PC ou Mac. Depois é só baixar o Studio e retomar de onde parou para avançar rumo à Jam. Quer analisar essa possibilidade ou prefere abrir o app direto?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Quero analisar a possibilidade", target: "explain-app" },
-        { action: "Abrir app agora", target: "redirect-app" },
-        { action: "Ainda tenho dúvida", target: "duvida-app" },
+        { action: "Conhecer no celular", target: "redirect-app" },
+        { action: "Baixar agora", target: "duvida-studio" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
@@ -2081,11 +2164,11 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "jam" && action === "app-help") {
     return {
       type: "options",
-      text: "A versão mobile foi feita para começar a criar de um jeito mais leve. Você aprende a lógica da criação, testa sua ideia de game e só depois continua no Studio para então levá-lo para a Jam. Quer ver como funciona esse fluxo ou já quer abrir o app?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Ver fluxo do app", target: "explain-app" },
-        { action: "Abrir app agora", target: "redirect-app" },
-        { action: "Ver opção PC", target: "duvida-studio" },
+        { action: "Conhecer no celular", target: "redirect-app" },
+        { action: "Baixar agora", target: "duvida-studio" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
@@ -2093,10 +2176,10 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "jam" && action === "email-help") {
     return {
       type: "options",
-      text: "Como você está no desktop, eu posso enviar para o seu email um link com a versão mobile do app de criação.",
+      text: "Como você está no desktop, eu posso enviar para o seu email o app de criação para começar no celular.",
       choices: [
-        { action: "Receber link do Roblox Studio + plugin", target: "duvida-email-studio" },
-        { action: "Ver opção mobile", target: "duvida-app" },
+        { action: "Criar no PC", target: "duvida-email-studio" },
+        { action: "Prefiro começar no celular", target: "duvida-app" },
       ],
     };
   }
@@ -2108,7 +2191,7 @@ function cardFocusMessage(currentJ, action) {
       choices: [
         { action: "Entender como funciona", target: "explain-jam" },
         { action: "Ir para comunidade no Discord →", target: "redirect-community" },
-        { action: "Ainda tenho dúvida", target: "duvida-criar" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
@@ -2140,11 +2223,11 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "aprender" && action === "studio") {
     return {
       type: "options",
-      text: "No PC ou no Mac, você faz a trilha completa da Expedição. Já quer baixar o Studio + plugin de tutoriais interativos ou quer ajuda para escolher entre ela e a versão mobile?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Visualizar fluxo", target: "explain-studio" },
-        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
-        { action: "Comparar versão mobile e PC/Mac", target: "duvida-app" },
+        { action: "Baixar agora", target: "redirect-studio" },
+        { action: "Prefiro começar no celular", target: "duvida-app" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
@@ -2152,11 +2235,11 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "aprender" && action === "studio-help") {
     return {
       type: "options",
-      text: "Comparando sem enrolação: no PC ou Mac, você cria direto no Studio, com mais controle e liberdade; no celular, você começa sem tantos recursos na versão mobile e depois segue para uma experiência mais completa no Studio. Qual alternativa faz mais sentido para você agora?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Visualizar fluxo", target: "explain-studio" },
-        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
-        { action: "Comparar versão mobile e PC/Mac", target: "duvida-app" },
+        { action: "Baixar agora", target: "redirect-studio" },
+        { action: "Prefiro começar no celular", target: "duvida-app" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
@@ -2164,11 +2247,11 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "aprender" && action === "app") {
     return {
       type: "options",
-      text: "No celular é jogo rápido porque você não precisa de um PC ou Mac para começar a criar. Basta abrir a versão mobile, testar sua ideia e salvar o seu progresso para continuar criando quando estiver no desktop. Quer ver esse fluxo ou quer compará-lo com o do computador?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Ver o fluxo da versão mobile", target: "explain-app" },
-        { action: "Abrir versão mobile", target: "redirect-app" },
-        { action: "Comparar versão mobile e PC/Mac", target: "duvida-studio" },
+        { action: "Conhecer no celular", target: "redirect-app" },
+        { action: "Baixar agora", target: "duvida-studio" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
@@ -2176,11 +2259,11 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "aprender" && action === "app-help") {
     return {
       type: "options",
-      text: "A versão mobile foi feita para começar a criar de um jeito mais leve. Você aprende a lógica da criação, testa sua ideia de game e só depois continua no Studio para então levá-lo para a Jam. Quer ver como funciona esse fluxo ou já quer abrir o app?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Ver fluxo do app", target: "explain-app" },
-        { action: "Abrir versão mobile", target: "redirect-app" },
-        { action: "Comparar versão mobile e PC/Mac", target: "duvida-studio" },
+        { action: "Conhecer no celular", target: "redirect-app" },
+        { action: "Baixar agora", target: "duvida-studio" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
@@ -2188,7 +2271,7 @@ function cardFocusMessage(currentJ, action) {
   if (currentJ === "aprender" && action === "chat") {
     return {
       type: "options",
-      text: "Comparando sem enrolação: no PC ou Mac, você cria direto no Studio, com mais controle e liberdade; no celular, você começa sem tantos recursos na versão mobile e depois segue para uma experiência mais completa no Studio. Qual alternativa faz mais sentido para você agora?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
         { action: "Quero criar no PC", target: "duvida-studio" },
         { action: "Quero começar no celular", target: "duvida-app" },
@@ -2215,10 +2298,10 @@ function contextualChoiceMessage(currentJ, target) {
   if (currentJ === "jam" && target === "duvida-email-studio") {
     return {
       type: "options",
-      text: "Perfeito. Você pode deixar seu email no campo desse card e eu te envio o link do Roblox Studio + plugin para abrir depois no PC ou Mac.",
+      text: "Perfeito. Você pode deixar seu email no campo desse card e eu te envio o Roblox Studio + plugin para criar no PC ou Mac.",
       choices: [
         { action: "Entendi", target: "fechar-duvida-email" },
-        { action: "Ver opção mobile", target: "duvida-app" },
+        { action: "Prefiro começar no celular", target: "duvida-app" },
       ],
     };
   }
@@ -2226,11 +2309,11 @@ function contextualChoiceMessage(currentJ, target) {
   if (currentJ === "aprender" && target === "duvida-studio") {
     return {
       type: "options",
-      text: "Comparando sem enrolação: no PC ou Mac, você cria direto no Studio, com mais controle e liberdade; no celular, você começa sem tantos recursos na versão mobile e depois segue para uma experiência mais completa no Studio. Qual alternativa faz mais sentido para você agora?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Visualizar fluxo", target: "explain-studio" },
+        { action: "Baixar agora", target: "explain-studio" },
         { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
-        { action: "Comparar versão mobile e PC/Mac", target: "duvida-app" },
+        { action: "Prefiro começar no celular", target: "redirect-app" },
       ],
     };
   }
@@ -2238,19 +2321,18 @@ function contextualChoiceMessage(currentJ, target) {
   if (currentJ === "aprender" && target === "duvida-app") {
     return {
       type: "options",
-      text: "No celular é jogo rápido porque você não precisa de um PC ou Mac para começar a criar. Basta abrir a versão mobile, testar sua ideia e salvar o seu progresso para continuar criando quando estiver no desktop. Quer ver esse fluxo ou quer compará-lo com o do computador?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Ver o fluxo da versão mobile", target: "explain-app" },
-        { action: "Abrir versão mobile", target: "redirect-app" },
-        { action: "Comparar versão mobile e PC/Mac", target: "duvida-studio" },
+        { action: "Conhecer no celular", target: "redirect-app" },
+        { action: "Baixar agora", target: "redirect-studio" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
-
   if (currentJ === "aprender" && target === "duvida-criar") {
     return {
       type: "options",
-      text: "Comparando sem enrolação: no PC ou Mac, você cria direto no Studio, com mais controle e liberdade; no celular, você começa sem tantos recursos na versão mobile e depois segue para uma experiência mais completa no Studio. Qual alternativa faz mais sentido para você agora?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
         { action: "Quero criar no PC", target: "duvida-studio" },
         { action: "Quero começar no celular", target: "duvida-app" },
@@ -2272,11 +2354,11 @@ function contextualChoiceMessage(currentJ, target) {
   if (currentJ === "jam" && target === "duvida-studio") {
     return {
       type: "options",
-      text: "Se você quer ter mais recursos disponíveis para desenvolver seu game, participar da Game Jam e acessar a comunidade no Discord, baixar o Roblox Studio + plugin de tutoriais é a melhor opção. Quer ver como esse fluxo funciona ou já quer fazer o download?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Visualizar fluxo", target: "explain-studio" },
-        { action: "Baixar Roblox Studio + plugin", target: "redirect-studio" },
-        { action: "Ver opção mobile", target: "duvida-app" },
+        { action: "Baixar agora", target: "explain-studio" },
+        { action: "Prefiro começar no celular", target: "redirect-app" },
+        { action: "Continuar no site", target: "browse-journey" },
       ],
     };
   }
@@ -2284,11 +2366,23 @@ function contextualChoiceMessage(currentJ, target) {
   if (currentJ === "jam" && target === "duvida-app") {
     return {
       type: "options",
-      text: "Se você estiver no celular, temos um app para você começar a criar no seu dispositivo mesmo, sem depender de um PC ou Mac. Depois é só baixar o Studio e retomar de onde parou para avançar rumo à Jam. Quer analisar essa possibilidade ou prefere abrir o app direto?",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
       choices: [
-        { action: "Quero analisar a possibilidade", target: "explain-app" },
-        { action: "Abrir app agora", target: "redirect-app" },
-        { action: "Ver opção PC", target: "duvida-studio" },
+        { action: "Conhecer no celular", target: "redirect-app" },
+        { action: "Baixar agora", target: "redirect-studio" },
+        { action: "Continuar no site", target: "browse-journey" },
+      ],
+    };
+  }
+
+  if (currentJ === "jam" && target === "duvida-criar") {
+    return {
+      type: "options",
+      text: "No computador, você cria com o Roblox Studio. No celular, use o app de criação.",
+      choices: [
+        { action: "Entender como funciona", target: "explain-jam" },
+        { action: "Baixar agora", target: "explain-studio" },
+        { action: "Prefiro começar no celular", target: "duvida-app" },
       ],
     };
   }
@@ -2323,7 +2417,7 @@ function resultMessage(currentJ, answered, cidade) {
   if (currentJ === "expo") {
     if (!temEvento) {
       const text =
-        "No momento, não há evento previsto para o seu Estado, mas você pode participar da comunidade Jam e do evento online Game Jam para criar games e concorrer a prêmios ou aprender a criar do zero no site Expedição Roblox - Aprender a criar.";
+        "No momento, não há evento previsto para o seu Estado. Você pode seguir para a Game Jam ou visitar o site Expedição Roblox - Aprender a Criar.";
       return {
         type: "result",
         text,
@@ -2335,7 +2429,7 @@ function resultMessage(currentJ, answered, cidade) {
     }
 
     const text =
-      "Boa! E que bom que vai rolar Expedição Roblox na Estrada no seu Estado! Você já quer se inscrever no evento ou prefere dar uma olhada no site Expedição Roblox - Aprender Criar antes de fazer a sua inscrição?";
+      "Boa! Vai rolar Expedição Roblox na Estrada no seu Estado. Você já quer se inscrever ou prefere visitar o site Expedição Roblox - Aprender a Criar?";
     const choices = [
       { action: "Fazer minha inscrição", target: "explain-evento" },
       { action: "Visitar o site", target: "goto-aprender" },
@@ -2348,16 +2442,16 @@ function resultMessage(currentJ, answered, cidade) {
   return {
     type: "result",
     text: mobile
-      ? "No celular é jogo rápido porque você não precisa de um PC ou Mac para começar a criar. Basta abrir a versão mobile, testar sua ideia e salvar o seu progresso para continuar criando quando estiver no desktop. Quer ver esse fluxo ou quer compará-lo com o do computador?"
+      ? "No computador, você cria com o Roblox Studio. No celular, use o app de criação."
       : "No PC ou Mac, você cria direto no Studio, com mais controle e liberdade; no celular, você começa sem tantos recursos na versão mobile e depois segue para uma experiência mais completa no Studio. Qual alternativa faz mais sentido para você agora?",
     choices: mobile
       ? [
-          { action: "Abrir versão mobile", target: "explain-app" },
-          { action: "Receber link do app", target: "duvida-app" },
+          { action: "Conhecer no celular", target: "explain-app" },
+          { action: "Prefiro começar no celular", target: "duvida-app" },
         ]
       : [
           { action: "Baixar Roblox Studio + plugin", target: "explain-studio" },
-          { action: "Receber link do app", target: "duvida-app" },
+          { action: "Prefiro começar no celular", target: "duvida-app" },
         ],
   };
 }

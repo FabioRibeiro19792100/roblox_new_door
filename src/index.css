@@ -364,8 +364,20 @@ button,input{font:inherit;}
 .cw-ex-item{display:flex;gap:8px;font-size:12px;color:var(--t2);line-height:1.5;}
 .cw-ex-num{width:18px;height:18px;background:var(--blk);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px;}
 .cw-go-btn{display:block;width:100%;border:none;padding:11px;font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:700;color:var(--blk);cursor:pointer;text-align:center;}
-.cw-back{background:transparent;border:none;font-size:11px;color:var(--t3);cursor:pointer;margin-top:6px;display:block;text-align:left;font-family:"Poppins",sans-serif;}
-.cw-back:hover{color:var(--t2);}
+.cw-back{
+  background:transparent;
+  border:none;
+  font-size:11px;
+  color:#0A0A0A;
+  cursor:pointer;
+  margin:6px auto 0;
+  display:block;
+  width:fit-content;
+  text-align:center;
+  font-family:"Poppins",sans-serif;
+  font-weight:600;
+}
+.cw-back:hover{color:#000;}
 .frame-blur{display:none;position:absolute;inset:0;background:rgba(250,250,250,.6);backdrop-filter:blur(4px);z-index:49;}
 .frame-blur.on{display:block;}
 .frames{padding:0;display:flex;justify-content:center;}
